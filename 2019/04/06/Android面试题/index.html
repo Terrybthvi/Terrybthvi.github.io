@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+
+
+
+
+
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content>
+    <meta name="author" content="John Doe">
+    <meta name="keywords" content>
+    <title>Hexo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/css/mdb.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_1067060_vr10bjtg3us.css">
+    
+        <link rel="stylesheet" href="/css/Prettify/tomorrow-night-eighties.min.css">
+    
+</head>
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+<div class="container">
+    <a class="navbar-brand" href="/"><strong>Hexo</strong></a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto text-center">
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/">首页</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/archives/">时光轴</a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link" href="/about/">关于我</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+
+</nav>
+    <div class="view intro-2" style='background: url("http://imgs.aixifan.com/live/1483503430007/1483503430007.jpg")no-repeat center center;background-size: cover;'>
+    <div class="full-bg-img">
+        <div class="mask rgba-black-light flex-center">
+        <div class="container text-center white-text wow fadeInUp">
+            <p class="h2"></p>
+            <br>
+            
+            <p>Saturday, April 6th 2019, 5:41 pm</p>
+            
+        </div>
+        </div>
+    </div>
+    </div>
+  </header>
+
+  <main>
+  
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 ">
+            <div class="post-content py-5 z-depth-3 main">
+                <h2 id="一、java面试题"><a href="#一、java面试题" class="headerlink" title="一、java面试题"></a>一、java面试题</h2><p>熟练掌握java是很关键的，大公司不仅仅要求你会使用几个api，更多的是要你熟悉源码实现原理，甚至要你知道有哪些不足，怎么改进，还有一些java有关的一些算法，设计模式等等。</p>
+<h3 id="（一）-java基础面试知识点"><a href="#（一）-java基础面试知识点" class="headerlink" title="（一） java基础面试知识点"></a>（一） java基础面试知识点</h3><p><strong>1. java中==和equals和hashCode的区别</strong></p>
+<p>“==”是比较基本数据类型，比较的是内存地址是否一致，equals是比较的引用类型，比较的是内容是否一致。equals返回为true，则两个对象的hashcode一定相等。</p>
+<p><strong>2. int、char、long各占多少字节数</strong></p>
+<ul>
+<li>byte:1个字节 8位 -128~127</li>
+<li>short ：2个字节 16位</li>
+<li>int ：4个字节 32位</li>
+<li>long：8个字节 64位</li>
+</ul>
+<p><strong>3. int与integer的区别</strong></p>
+<p>int是基本数据类型，Integer是引用类型；int默认值为0，Integer默认值为null；Integer必须实例化后才能引用</p>
+<p><strong>4. 谈谈对java多态的理解</strong></p>
+<p>多态的分类</p>
+<ul>
+<li>编译时多态：通过重载实现。</li>
+<li>运行时多态：继承和接口来实现。</li>
+</ul>
+<p>多态的条件：<br>要有继承，重写，并且父类引用指向子类。</p>
+<p>多态的好处：</p>
+<ul>
+<li>可替换性：对已存在的代码替换。</li>
+<li>可扩充性：增加新的子类不影响已存在的类的多态性。</li>
+<li>灵活性。</li>
+<li>简化性。</li>
+</ul>
+<p><strong>5. String、StringBuffer、StringBuilder区别</strong></p>
+<p>三者速度上的较量：StringBuilder &gt; StringBuffer  &gt;String.</p>
+<ul>
+<li>1.如果要操作少量的数据用 = String</li>
+<li>2.单线程操作字符串缓冲区 下操作大量数据 = StringBuilder</li>
+<li>3.多线程操作字符串缓冲区 下操作大量数据 = StringBuffer</li>
+</ul>
+<p><strong>6. 什么是内部类？内部类的作用</strong></p>
+<p>放在一个类的内部的类我们就叫内部类。</p>
+<p>1.内部类可以很好的实现隐藏</p>
+<p> 一般的非内部类，是不允许有 private 与protected权限的，但内部类可以</p>
+<p>2．内部类拥有外围类的所有元素的访问权限</p>
+<p>3.可是实现多重继承</p>
+<p>4.可以避免修改接口而实现同一个类中两种同名方法的调用。</p>
+<p><strong>7. 抽象类和接口区别</strong></p>
+<ul>
+<li>1、关键字:抽象类 abstract         接口interface</li>
+<li>2、抽象类继承 extends             接口实现 implements</li>
+<li>3、子类继承抽象类和                实现类实现接口的格式不同</li>
+<li>4、抽象类中有各种属性和方法         接口中只有全局变量和抽象方法</li>
+<li>5、抽象类只能单继承                接口可以多实现</li>
+<li>6、抽象类的子类只能继承一个父类      实现类可以实现多个接口，并且还可以继承父类</li>
+<li>7、抽象类的作用：提高代码的复用性    接口的作用：1、规范代码2、提高代码的拓展新</li>
+</ul>
+<p><strong>8. 抽象类的意义</strong></p>
+<p>对代码的维护和重用。</p>
+<p><strong>9. 抽象类与接口的应用场景</strong><br><strong>interface的应用场合</strong></p>
+<ul>
+<li>类与类之前需要特定的接口进行协调，而不在乎其如何实现。</li>
+<li>作为能够实现特定功能的标识存在，也可以是什么接口方法都没有的纯粹标识。</li>
+<li>需要将一组类视为单一的类，而调用者只通过接口来与这组类发生联系。</li>
+<li>需要实现特定的多项功能，而这些功能之间可能完全没有任何联系。</li>
+</ul>
+<p><strong>abstract class的应用场合</strong></p>
+<p>一句话，在既需要统一的接口，又需要实例变量或缺省的方法的情况下，就可以使用它。最常见的有：</p>
+<ul>
+<li>定义了一组接口，但又不想强迫每个实现类都必须实现所有的接口。可以用abstract class定义一组方法体，甚至可以是空方法体，然后由子类选择自己所感兴趣的方法来覆盖。</li>
+<li>某些场合下，只靠纯粹的接口不能满足类与类之间的协调，还必需类中表示状态的变量来区别不同的关系。abstract的中介作用可以很好地满足这一点。</li>
+<li>规范了一组相互协调的方法，其中一些方法是共同的，与状态无关的，可以共享的，无需子类分别实现；而另一些方法却需要各个子类根据自己特定的状态来实现特定的功能</li>
+</ul>
+<p><strong>10. 抽象类是否可以没有方法和属性？</strong></p>
+<p>可以有任意的方法和属性，接口只能有全局的变量和抽象方法。</p>
+<p><strong>11. 接口的意义</strong></p>
+<p>实现多继承，抽象类只能继承一个，而接口可以实现多个。</p>
+<p><strong>12. 泛型中extends和super的区别</strong></p>
+<ul>
+<li>&lt;? extends T&gt; 只能用于方法返回，告诉编译器此返参的类型的最小继承边界为T，T和T的父类都能接收，但是入参类型无法确定，只能接受null的传入</li>
+<li>&lt;? super T&gt;只能用于限定方法入参，告诉编译器入参只能是T或其子类型，而返参只能用Object类接收? 既不能用于入参也不能用于返参</li>
+</ul>
+<p><strong>13. 父类的静态方法能否被子类重写</strong></p>
+<p>不能，静态方法在编译期就已经为该方法分配一块内存，程序运行期间不会被回收，只有当程序运行结束才会回收。</p>
+<p><strong>14. 进程和线程的区别</strong></p>
+<p><code>进程：</code>进程是具有一定独立功能的程序关于某个数据集合上的一次运行活动,进程是系统进行资源分配和调度的一个独立单位.</p>
+<p><code>线程</code>是进程的一个实体,是CPU调度和分派的基本单位,它是比进程更小的能独立运行的基本单位.线程自己基本上不拥有系统资源,只拥有一点在运行中必不可少的资源(如程序计数器,一组寄存器和栈),但是它可与同属一个进程的其他的线程共享进程所拥有的全部资源.</p>
+<ul>
+<li>一个线程可以创建和撤销另一个线程;同一个进程中的多个线程之间可以并发执行.</li>
+<li>一个程序至少有一个进程,一个进程至少有一个线程.</li>
+<li>进程在执行过程中拥有独立的内存单元，而多个线程共享内存，从而极大地提高了程序的运行效率。</li>
+<li>每个独立的线程有一个程序运行的入口、顺序执行序列和程序的出口。但是线程不能够独立执行，必须依存在应用程序中，由应用程序提供多个线程执行控制。</li>
+</ul>
+<p><strong>15. final，finally，finalize的区别</strong></p>
+<p><code>final:</code>修饰符（关键字） 如果一个类被声明为final,意味着它不能再派生新的子类，不能作为父类被继承。因此一个类不能及被声明为abstract，又被声明为final的。</p>
+<p><code>finally:</code>在异常处理时提供finally块来执行清除操作。如果抛出一个异常，那么相匹配的catch语句就会执行，然后控制就会进入finally块，如果有的话。</p>
+<p><code>finalize():</code>是方法名。java技术允许使用finalize()方法在垃圾收集器将对象从内存中清除之前做必要的清理工作。这个方法是在垃圾收集器在确定了，被清理对象没有被引用的情况下调用的。</p>
+<p><strong>16. 序列化的方式</strong><br>Serializable Parcelable<br><strong>17. Serializable 和Parcelable 的区别</strong></p>
+<ul>
+<li>Serializable是属于 Java 自带的，表示一个对象可以转换成可存储或者可传输的状态，序列化后的对象可以在网络上进行传输，也可以存储到本地。</li>
+<li>Parcelable 是属于 Android 专用。不过不同于Serializable，Parcelable实现的原理是将一个完整的对象进行分解。而分解后的每一部分都是Intent所支持的数据类型。</li>
+<li>Serializable的本质是使用了反射，序列化的过程比较慢，这种机制在序列化的时候会创建很多临时的对象，比引起频繁的GC。</li>
+<li>Parcelable方式的本质是将一个完整的对象进行分解，而分解后的每一部分都是Intent所支持的类型，这样就实现了传递对象的功能了。</li>
+</ul>
+<p><strong>18. 静态属性和静态方法是否可以被继承？是否可以被重写？以及原因？</strong></p>
+<p>继承：父类的静态属性和方法<strong>可以被子类继承</strong></p>
+<p>重写：当父类的引用指向子类时，使用对象调用静态方法或者静态变量，是调用的父类中的方法或者变量。并没有被子类改写。<br>所以我认为<strong>不可以被子类重写</strong>。</p>
+<p>原因：static修饰函数/变量时，其实是全局函数/变量。</p>
+<p><strong>19. 静态内部类的设计意图</strong></p>
+<p>内部类的原因是：每个内部类都能独立地继承一个（接口的）实现，所以无论外围类是否已经继承了某个（接口的）实现，对于内部类都没有影响。</p>
+<p><strong>20. 成员内部类、静态内部类、局部内部类和匿名内部类的理解，以及项目中的应用</strong></p>
+<p><strong>局部内部类</strong>是嵌套在方法和作用于内的，对于这个类的使用主要是应用与解决比较复杂的问题，想创建一个类来辅助我们的解决方案，到那时又不希望这个类是公共可用的，所以就产生了局部内部类，局部内部类和成员内部类一样被编译，只是它的作用域发生了改变，它只能在该方法和属性中被使用，出了该方法和属性就会失效。</p>
+<p>静态内部类与非静态内部类之间存在一个最大的区别：<strong>非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围内，但是静态内部类却没有。</strong><br>没有这个引用就意味着：</p>
+<ul>
+<li>它的创建是不需要依赖于外围类的。</li>
+<li>它不能使用任何外围类的非static成员变量和方法。</li>
+</ul>
+<p><strong>21. 闭包和局部内部类的区别</strong></p>
+<p><strong>闭包</strong>就是把函数以及变量包起来，使得变量的生存周期延长。闭包跟面向对象是一棵树上的两条枝，实现的功能是等价的。<br>简单理解：闭包能够将一个方法作为一个变量去存储，这个方法有能力去访问所在类的自由变量。</p>
+<p><strong>22. string 转换成 integer的方式及原理</strong></p>
+<p>integer.parseInt(string str)方法调用Integer内部的<br>parseInt(string str,10)方法,默认基数为10，parseInt内部首先<br>判断字符串是否包含符号（-或者+），则对相应的negative和limit进行<br>赋值，然后再循环字符串，对单个char进行数值计算Character.digit(char ch, int radix)<br>在这个方法中，函数肯定进入到0-9字符的判断（相对于string转换到int），否则会抛出异常，数字就是如上面进行拼接然后生成的int类型数值。</p>
+<h3 id="（二）-java深入源码级的面试题（有难度）"><a href="#（二）-java深入源码级的面试题（有难度）" class="headerlink" title="（二） java深入源码级的面试题（有难度）"></a>（二） java深入源码级的面试题（有难度）</h3><ol>
+<li>哪些情况下的对象会被垃圾回收机制处理掉？</li>
+<li>讲一下常见编码方式？</li>
+<li>utf-8编码中的中文占几个字节；int型几个字节？</li>
+<li>静态代理和动态代理的区别，什么场景使用？</li>
+<li>Java的异常体系</li>
+<li>谈谈你对解析与分派的认识。</li>
+<li>修改对象A的equals方法的签名，那么使用HashMap存放这个对象实例的时候，会调用哪个equals方法？</li>
+<li>Java中实现多态的机制是什么？</li>
+<li>如何将一个Java对象序列化到文件里？</li>
+<li>说说你对Java反射的理解</li>
+<li>说说你对Java注解的理解</li>
+<li>说说你对依赖注入的理解</li>
+<li>说一下泛型原理，并举例说明</li>
+<li>Java中String的了解</li>
+<li>String为什么要设计成不可变的？</li>
+<li>Object类的equal和hashCode方法重写，为什么？<h3 id="（三）-数据结构"><a href="#（三）-数据结构" class="headerlink" title="（三） 数据结构"></a>（三） 数据结构</h3></li>
+<li>常用数据结构简介</li>
+<li>并发集合了解哪些？</li>
+<li>列举java的集合以及集合之间的继承关系</li>
+<li>集合类以及集合框架</li>
+<li>容器类介绍以及之间的区别（容器类估计很多人没听这个词，Java容器主要可以划分为4个部分：List列表、Set集合、Map映射、工具类（Iterator迭代器、Enumeration枚举类、Arrays和Collections），具体的可以看看这篇博文 Java容器类）</li>
+<li>List,Set,Map的区别</li>
+<li>List和Map的实现方式以及存储方式</li>
+<li>HashMap的实现原理</li>
+<li>HashMap数据结构？</li>
+<li>HashMap源码理解</li>
+<li>HashMap如何put数据（从HashMap源码角度讲解）？</li>
+<li>HashMap怎么手写实现？</li>
+<li>ConcurrentHashMap的实现原理</li>
+<li>ArrayMap和HashMap的对比</li>
+<li>HashTable实现原理</li>
+<li>TreeMap具体实现</li>
+<li>HashMap和HashTable的区别</li>
+<li>HashMap与HashSet的区别</li>
+<li>HashSet与HashMap怎么判断集合元素重复？</li>
+<li>集合Set实现Hash怎么防止碰撞</li>
+<li>ArrayList和LinkedList的区别，以及应用场景</li>
+<li>数组和链表的区别</li>
+<li>二叉树的深度优先遍历和广度优先遍历的具体实现</li>
+<li>堆的结构</li>
+<li>堆和树的区别</li>
+<li>堆和栈在内存中的区别是什么(解答提示：可以从数据结构方面以及实际实现方面两个方面去回答)？</li>
+<li>什么是深拷贝和浅拷贝</li>
+<li>手写链表逆序代码</li>
+<li>讲一下对树，B+树的理解</li>
+<li>讲一下对图的理解</li>
+<li>判断单链表成环与否？</li>
+<li>链表翻转（即：翻转一个单项链表）</li>
+<li><p>合并多个单有序链表（假设都是递增的）</p>
+<h3 id="（四）-线程、多线程和线程池"><a href="#（四）-线程、多线程和线程池" class="headerlink" title="（四） 线程、多线程和线程池"></a>（四） 线程、多线程和线程池</h3></li>
+<li><p>开启线程的三种方式？</p>
+</li>
+<li>线程和进程的区别？</li>
+<li>为什么要有线程，而不是仅仅用进程？</li>
+<li>run()和start()方法区别</li>
+<li>如何控制某个方法允许并发访问线程的个数？</li>
+<li>在Java中wait和seelp方法的不同；</li>
+<li>谈谈wait/notify关键字的理解</li>
+<li>什么导致线程阻塞？</li>
+<li>线程如何关闭？</li>
+<li>讲一下java中的同步的方法</li>
+<li>数据一致性如何保证？</li>
+<li>如何保证线程安全？</li>
+<li>如何实现线程同步？</li>
+<li>两个进程同时要求写或者读，能不能实现？如何防止进程的同步？</li>
+<li>线程间操作List</li>
+<li>Java中对象的生命周期</li>
+<li>Synchronized用法</li>
+<li>synchronize的原理</li>
+<li>谈谈对Synchronized关键字，类锁，方法锁，重入锁的理解</li>
+<li>static synchronized 方法的多线程访问和作用</li>
+<li>同一个类里面两个synchronized方法，两个线程同时访问的问题</li>
+<li>volatile的原理</li>
+<li>谈谈volatile关键字的用法</li>
+<li>谈谈volatile关键字的作用</li>
+<li>谈谈NIO的理解</li>
+<li>synchronized 和volatile 关键字的区别</li>
+<li>synchronized与Lock的区别</li>
+<li>ReentrantLock 、synchronized和volatile比较</li>
+<li>ReentrantLock的内部实现</li>
+<li>lock原理</li>
+<li>死锁的四个必要条件？</li>
+<li>怎么避免死锁？</li>
+<li>对象锁和类锁是否会互相影响？</li>
+<li>什么是线程池，如何使用?</li>
+<li>Java的并发、多线程、线程模型</li>
+<li>谈谈对多线程的理解</li>
+<li>多线程有什么要注意的问题？</li>
+<li>谈谈你对并发编程的理解并举例说明</li>
+<li>谈谈你对多线程同步机制的理解？</li>
+<li>如何保证多线程读写文件的安全？</li>
+<li>多线程断点续传原理</li>
+<li>断点续传的实现<h3 id="（五）并发编程有关知识点（这个是一般Android开发用的少的，所以建议多去看看）："><a href="#（五）并发编程有关知识点（这个是一般Android开发用的少的，所以建议多去看看）：" class="headerlink" title="（五）并发编程有关知识点（这个是一般Android开发用的少的，所以建议多去看看）："></a>（五）并发编程有关知识点（这个是一般Android开发用的少的，所以建议多去看看）：</h3></li>
+</ol>
+<p>平时Android开发中对并发编程可以做得比较少，Thread这个类经常会用到，但是我们想提升自己的话，一定不能停留在表面，,我们也应该去了解一下java的关于线程相关的源码级别的东西。</p>
+<h2 id="二、Android面试题"><a href="#二、Android面试题" class="headerlink" title="二、Android面试题"></a>二、Android面试题</h2><p>Android面试题包括Android基础，还有一些源码级别的、原理这些等。所以想去大公司面试，一定要多看看源码和实现方式，常用框架可以试试自己能不能手写实现一下，锻炼一下自己。</p>
+<h3 id="（一）Android基础知识点"><a href="#（一）Android基础知识点" class="headerlink" title="（一）Android基础知识点"></a>（一）Android基础知识点</h3><ol>
+<li>四大组件是什么</li>
+<li>四大组件的生命周期和简单用法</li>
+<li>Activity之间的通信方式</li>
+<li>Activity各种情况下的生命周期</li>
+<li>横竖屏切换的时候，Activity 各种情况下的生命周期</li>
+<li>Activity与Fragment之间生命周期比较</li>
+<li>Activity上有Dialog的时候按Home键时的生命周期</li>
+<li>两个Activity 之间跳转时必然会执行的是哪几个方法？</li>
+<li>前台切换到后台，然后再回到前台，Activity生命周期回调方法。弹出Dialog，生命值周期回调方法。</li>
+<li>Activity的四种启动模式对比</li>
+<li>Activity状态保存于恢复</li>
+<li>fragment各种情况下的生命周期</li>
+<li>Fragment状态保存startActivityForResult是哪个类的方法，在什么情况下使用？</li>
+<li>如何实现Fragment的滑动？</li>
+<li>fragment之间传递数据的方式？</li>
+<li>Activity 怎么和Service 绑定？</li>
+<li>怎么在Activity 中启动自己对应的Service？</li>
+<li>service和activity怎么进行数据交互？</li>
+<li>Service的开启方式</li>
+<li>请描述一下Service 的生命周期</li>
+<li>谈谈你对ContentProvider的理解</li>
+<li>说说ContentProvider、ContentResolver、ContentObserver 之间的关系</li>
+<li>请描述一下广播BroadcastReceiver的理解</li>
+<li>广播的分类</li>
+<li>广播使用的方式和场景</li>
+<li>在manifest 和代码中如何注册和使用BroadcastReceiver?</li>
+<li>本地广播和全局广播有什么差别？</li>
+<li>BroadcastReceiver，LocalBroadcastReceiver 区别</li>
+<li>AlertDialog,popupWindow,Activity区别</li>
+<li>Application 和 Activity 的 Context 对象的区别</li>
+<li>Android属性动画特性</li>
+<li>如何导入外部数据库?</li>
+<li>LinearLayout、RelativeLayout、FrameLayout的特性及对比，并介绍使用场景。</li>
+<li>谈谈对接口与回调的理解</li>
+<li>回调的原理</li>
+<li>写一个回调demo</li>
+<li>介绍下SurfView</li>
+<li>RecycleView的使用</li>
+<li>序列化的作用，以及Android两种序列化的区别</li>
+<li>差值器</li>
+<li>估值器</li>
+<li>Android中数据存储方式<br><strong>21. 谈谈对kotlin的理解</strong></li>
+</ol>
+<p>（二）Android源码相关分析</p>
+<p>Android动画框架实现原理<br>Android各个版本API的区别<br>Requestlayout，onlayout，onDraw，DrawChild区别与联系<br>invalidate和postInvalidate的区别及使用<br>Activity-Window-View三者的差别<br>谈谈对Volley的理解<br>如何优化自定义View<br>低版本SDK如何实现高版本api？<br>描述一次网络请求的流程<br>HttpUrlConnection 和 okhttp关系<br>Bitmap对象的理解<br>looper架构<br>ActivityThread，AMS，WMS的工作原理<br>自定义View如何考虑机型适配<br>自定义View的事件<br>AstncTask+HttpClient 与 AsyncHttpClient有什么区别？<br>LaunchMode应用场景<br>AsyncTask 如何使用?<br>SpareArray原理<br>请介绍下ContentProvider 是如何实现数据共享的？<br>AndroidService与Activity之间通信的几种方式<br>IntentService原理及作用是什么？<br>说说Activity、Intent、Service 是什么关系<br>ApplicationContext和ActivityContext的区别<br>SP是进程同步的吗?有什么方法做到同步？<br>谈谈多线程在Android中的使用<br>进程和 Application 的生命周期<br>封装View的时候怎么知道view的大小<br>RecycleView原理<br>AndroidManifest的作用与理解</p>
+<h3 id="（三）常见的一些原理性问题"><a href="#（三）常见的一些原理性问题" class="headerlink" title="（三）常见的一些原理性问题"></a>（三）常见的一些原理性问题</h3><ol>
+<li>Handler机制和底层实现</li>
+<li>Handler、Thread和HandlerThread的差别</li>
+<li>handler发消息给子线程，looper怎么启动？</li>
+<li>关于Handler，在任何地方new Handler 都是什么线程下?</li>
+<li>ThreadLocal原理，实现及如何保证Local属性？</li>
+<li>请解释下在单线程模型中Message、Handler、Message Queue、Looper之间的关系</li>
+<li>请描述一下View事件传递分发机制</li>
+<li>Touch事件传递流程</li>
+<li>事件分发中的onTouch 和onTouchEvent 有什么区别，又该如何使用？</li>
+<li>View和ViewGroup分别有哪些事件分发相关的回调方法</li>
+<li>View刷新机制</li>
+<li>View绘制流程</li>
+<li>自定义控件原理</li>
+<li>自定义View如何提供获取View属性的接口？</li>
+<li>Android代码中实现WAP方式联网</li>
+<li>AsyncTask机制</li>
+<li>AsyncTask原理及不足</li>
+<li>如何取消AsyncTask？</li>
+<li>为什么不能在子线程更新UI？</li>
+<li>ANR产生的原因是什么？</li>
+<li>ANR定位和修正</li>
+<li>oom是什么？</li>
+<li>什么情况导致oom？</li>
+<li>有什么解决方法可以避免OOM？</li>
+<li>Oom 是否可以try catch？为什么？</li>
+<li>内存泄漏是什么？</li>
+<li>什么情况导致内存泄漏？</li>
+<li>如何防止线程的内存泄漏？</li>
+<li>内存泄露场的解决方法</li>
+<li>内存泄漏和内存溢出区别？</li>
+<li>LruCache默认缓存大小</li>
+<li>ContentProvider的权限管理(解答：读写分离，权限控制-精确到表级，URL控制)</li>
+<li>如何通过广播拦截和abort一条短信？</li>
+<li>广播是否可以请求网络？</li>
+<li>广播引起anr的时间限制是多少？</li>
+<li>计算一个view的嵌套层级</li>
+<li>Activity栈</li>
+<li>Android线程有没有上限？</li>
+<li>线程池有没有上限？</li>
+<li>ListView重用的是什么？</li>
+<li>Android为什么引入Parcelable？</li>
+<li><p>有没有尝试简化Parcelable的使用？</p>
+<h3 id="（四）开发中常见的一些问题"><a href="#（四）开发中常见的一些问题" class="headerlink" title="（四）开发中常见的一些问题"></a>（四）开发中常见的一些问题</h3></li>
+<li><p>ListView 中图片错位的问题是如何产生的?</p>
+</li>
+<li>混合开发有了解吗？</li>
+<li>知道哪些混合开发的方式？说出它们的优缺点和各自使用场景？（解答：比如:RN，weex，H5，小程序，WPA等。做Android的了解一些前- 端js等还是很有好处的)；</li>
+<li>屏幕适配的处理技巧都有哪些?</li>
+<li>服务器只提供数据接收接口，在多线程或多进程条件下，如何保证数据的有序到达？</li>
+<li>动态布局的理解</li>
+<li>怎么去除重复代码？</li>
+<li>画出 Android 的大体架构图</li>
+<li>Recycleview和ListView的区别</li>
+<li>ListView图片加载错乱的原理和解决方案</li>
+<li>动态权限适配方案，权限组的概念</li>
+<li>Android系统为什么会设计ContentProvider？</li>
+<li>下拉状态栏是不是影响activity的生命周期</li>
+<li>如果在onStop的时候做了网络请求，onResume的时候怎么恢复？</li>
+<li>Bitmap 使用时候注意什么？</li>
+<li>Bitmap的recycler()</li>
+<li>Android中开启摄像头的主要步骤</li>
+<li>ViewPager使用细节，如何设置成每次只初始化当前的Fragment，其他的不初始化？</li>
+<li>点击事件被拦截，但是想传到下面的View，如何操作？</li>
+<li>微信主页面的实现方式</li>
+<li>微信上消息小红点的原理</li>
+<li>CAS介绍（这是阿里巴巴的面试题，我不是很了解，可以参考博客: CAS简介）<h2 id="三、高级开发技术面试题"><a href="#三、高级开发技术面试题" class="headerlink" title="三、高级开发技术面试题"></a>三、高级开发技术面试题</h2></li>
+</ol>
+<p>这里讲的是大公司需要用到的一些高端Android技术，这里专门整理了一个文档，希望大家都可以看看。这些题目有点技术含量，需要好点时间去研究一下的。</p>
+<h3 id="（一）图片"><a href="#（一）图片" class="headerlink" title="（一）图片"></a>（一）图片</h3><ol>
+<li>图片库对比</li>
+<li>图片库的源码分析</li>
+<li>图片框架缓存实现</li>
+<li>LRUCache原理</li>
+<li>图片加载原理</li>
+<li>自己去实现图片库，怎么做？</li>
+<li>Glide源码解析</li>
+<li>Glide使用什么缓存？</li>
+<li><p>Glide内存缓存如何控制大小？</p>
+<h3 id="（二）网络和安全机制"><a href="#（二）网络和安全机制" class="headerlink" title="（二）网络和安全机制"></a>（二）网络和安全机制</h3></li>
+<li><p>网络框架对比和源码分析</p>
+</li>
+<li>自己去设计网络请求框架，怎么做？</li>
+<li>okhttp源码</li>
+<li>网络请求缓存处理，okhttp如何处理网络缓存的</li>
+<li>从网络加载一个10M的图片，说下注意事项</li>
+<li>TCP的3次握手和四次挥手</li>
+<li>TCP与UDP的区别</li>
+<li>TCP与UDP的应用</li>
+<li>HTTP协议</li>
+<li>HTTP1.0与2.0的区别</li>
+<li>HTTP报文结构</li>
+<li>HTTP与HTTPS的区别以及如何实现安全性</li>
+<li>如何验证证书的合法性?</li>
+<li>https中哪里用了对称加密，哪里用了非对称加密，对加密算法（如RSA）等是否有了解?</li>
+<li>client如何确定自己发送的消息被server收到?</li>
+<li>谈谈你对WebSocket的理解</li>
+<li>WebSocket与socket的区别</li>
+<li>谈谈你对安卓签名的理解。</li>
+<li>请解释安卓为啥要加签名机制?</li>
+<li>视频加密传输</li>
+<li>App 是如何沙箱化，为什么要这么做？</li>
+<li><p>权限管理系统（底层的权限是如何进行 grant 的）？</p>
+<h3 id="（三）数据库"><a href="#（三）数据库" class="headerlink" title="（三）数据库"></a>（三）数据库</h3></li>
+<li><p>sqlite升级，增加字段的语句</p>
+</li>
+<li>数据库框架对比和源码分析</li>
+<li>数据库的优化</li>
+<li><p>数据库数据迁移问题</p>
+<h3 id="（四）算法"><a href="#（四）算法" class="headerlink" title="（四）算法"></a>（四）算法</h3></li>
+<li><p>排序算法有哪些？</p>
+</li>
+<li>最快的排序算法是哪个？</li>
+<li>手写一个冒泡排序</li>
+<li>手写快速排序代码</li>
+<li>快速排序的过程、时间复杂度、空间复杂度</li>
+<li>手写堆排序</li>
+<li>堆排序过程、时间复杂度及空间复杂度</li>
+<li>写出你所知道的排序算法及时空复杂度，稳定性</li>
+<li>二叉树给出根节点和目标节点，找出从根节点到目标节点的路径</li>
+<li>给阿里2万多名员工按年龄排序应该选择哪个算法？</li>
+<li>GC算法(各种算法的优缺点以及应用场景)</li>
+<li>蚁群算法与蒙特卡洛算法</li>
+<li>子串包含问题(KMP 算法)写代码实现</li>
+<li>一个无序，不重复数组，输出N个元素，使得N个元素的和相加为M，给出时间复杂度、空间复杂度。手写算法</li>
+<li>万亿级别的两个URL文件A和B，如何求出A和B的差集C(提示：Bit映射-&gt;hash分组-&gt;多文件读写效率-&gt;磁盘寻址以及应用层面对寻址的优化)</li>
+<li>百度POI中如何试下查找最近的商家功能(提示：坐标镜像+R树)。</li>
+<li>两个不重复的数组集合中，求共同的元素。</li>
+<li>两个不重复的数组集合中，这两个集合都是海量数据，内存中放不下，怎么求共同的元素？</li>
+<li>一个文件中有100万个整数，由空格分开，在程序中判断用户输入的整数是否在此文件中。说出最优的方法</li>
+<li>一张Bitmap所占内存以及内存占用的计算</li>
+<li>2000万个整数，找出第五十大的数字？</li>
+<li>烧一根不均匀的绳，从头烧到尾总共需要1个小时。现在有若干条材质相同的绳子，问如何用烧绳的方法来计时一个小时十五分钟呢？</li>
+<li>求1000以内的水仙花数以及40亿以内的水仙花数</li>
+<li>5枚硬币，2正3反如何划分为两堆然后通过翻转让两堆中正面向上的硬8币和反面向上的硬币个数相同</li>
+<li>时针走一圈，时针分针重合几次</li>
+<li>N*N的方格纸,里面有多少个正方形</li>
+<li><p>x个苹果，一天只能吃一个、两个、或者三个，问多少天可以吃完？</p>
+<h3 id="（五）插件化、模块化、组件化、热修复、增量更新、Gradle"><a href="#（五）插件化、模块化、组件化、热修复、增量更新、Gradle" class="headerlink" title="（五）插件化、模块化、组件化、热修复、增量更新、Gradle"></a>（五）插件化、模块化、组件化、热修复、增量更新、Gradle</h3></li>
+<li><p>对热修复和插件化的理解</p>
+</li>
+<li>插件化原理分析</li>
+<li>模块化实现（好处，原因）</li>
+<li>热修复,插件化</li>
+<li>项目组件化的理解</li>
+<li><p>描述清点击 Android Studio 的 build 按钮后发生了什么</p>
+<h3 id="（六）架构设计和设计模式"><a href="#（六）架构设计和设计模式" class="headerlink" title="（六）架构设计和设计模式"></a>（六）架构设计和设计模式</h3></li>
+<li><p>谈谈你对Android设计模式的理解</p>
+</li>
+<li>MVC MVP MVVM原理和区别</li>
+<li>你所知道的设计模式有哪些？</li>
+<li>项目中常用的设计模式</li>
+<li>手写生产者/消费者模式</li>
+<li>写出观察者模式的代码</li>
+<li>适配器模式，装饰者模式，外观模式的异同？</li>
+<li>用到的一些开源框架，介绍一个看过源码的，内部实现过程。</li>
+<li>谈谈对RxJava的理解</li>
+<li>RxJava的功能与原理实现</li>
+<li>RxJava的作用，与平时使用的异步操作来比的优缺点</li>
+<li>说说EventBus作用，实现方式，代替EventBus的方式</li>
+<li>从0设计一款App整体架构，如何去做？</li>
+<li>说一款你认为当前比较火的应用并设计(比如：直播APP，P2P金融，小视频等)</li>
+<li>谈谈对java状态机理解</li>
+<li>Fragment如果在Adapter中使用应该如何解耦？</li>
+<li>Binder机制及底层实现</li>
+<li>对于应用更新这块是如何做的？(解答：灰度，强制更新，分区域更新)？</li>
+<li>实现一个Json解析器(可以通过正则提高速度)</li>
+<li><p>统计启动时长,标准</p>
+<h3 id="（七）性能优化"><a href="#（七）性能优化" class="headerlink" title="（七）性能优化"></a>（七）性能优化</h3></li>
+<li><p>如何对Android 应用进行性能分析以及优化?</p>
+</li>
+<li>ddms 和 traceView</li>
+<li>性能优化如何分析systrace？</li>
+<li>用IDE如何分析内存泄漏？</li>
+<li>Java多线程引发的性能问题，怎么解决？</li>
+<li>启动页白屏及黑屏解决？</li>
+<li>启动太慢怎么解决？</li>
+<li>怎么保证应用启动不卡顿？</li>
+<li>App启动崩溃异常捕捉</li>
+<li>自定义View注意事项</li>
+<li>现在下载速度很慢,试从网络协议的角度分析原因,并优化(提示：网络的5层都可以涉及)。</li>
+<li>Https请求慢的解决办法（提示：DNS，携带数据，直接访问IP）</li>
+<li>如何保持应用的稳定性</li>
+<li>RecyclerView和ListView的性能对比</li>
+<li>ListView的优化</li>
+<li>RecycleView优化</li>
+<li>View渲染</li>
+<li>Bitmap如何处理大图，如一张30M的大图，如何预防OOM</li>
+<li>java中的四种引用的区别以及使用场景</li>
+<li><p>强引用置为null，会不会被回收？</p>
+<h3 id="（八）NDK、jni、Binder、AIDL、进程通信有关"><a href="#（八）NDK、jni、Binder、AIDL、进程通信有关" class="headerlink" title="（八）NDK、jni、Binder、AIDL、进程通信有关"></a>（八）NDK、jni、Binder、AIDL、进程通信有关</h3></li>
+<li><p>请介绍一下NDK</p>
+</li>
+<li>什么是NDK库?</li>
+<li>jni用过吗？</li>
+<li>如何在jni中注册native函数，有几种注册方式?</li>
+<li>Java如何调用c、c++语言？</li>
+<li>jni如何调用java层代码？</li>
+<li>进程间通信的方式？</li>
+<li>Binder机制</li>
+<li>简述IPC？</li>
+<li>什么是AIDL？</li>
+<li>AIDL解决了什么问题？</li>
+<li>AIDL如何使用？</li>
+<li>Android 上的 Inter-Process-Communication 跨进程通信时如何工作的？</li>
+<li>多进程场景遇见过么？</li>
+<li>Android进程分类？</li>
+<li>进程和 Application 的生命周期？</li>
+<li>进程调度</li>
+<li>谈谈对进程共享和线程安全的认识</li>
+<li>谈谈对多进程开发的理解以及多进程应用场景</li>
+<li><p>什么是协程？</p>
+<h3 id="（九）framework层、ROM定制、Ubuntu、Linux之类的问题"><a href="#（九）framework层、ROM定制、Ubuntu、Linux之类的问题" class="headerlink" title="（九）framework层、ROM定制、Ubuntu、Linux之类的问题"></a>（九）framework层、ROM定制、Ubuntu、Linux之类的问题</h3></li>
+<li><p>java虚拟机的特性</p>
+</li>
+<li>谈谈对jvm的理解</li>
+<li>JVM内存区域，开线程影响哪块内存</li>
+<li>对Dalvik、ART虚拟机有什么了解？</li>
+<li>Art和Dalvik对比</li>
+<li>虚拟机原理，如何自己设计一个虚拟机(内存管理，类加载，双亲委派)</li>
+<li>谈谈你对双亲委派模型理解</li>
+<li>JVM内存模型，内存区域</li>
+<li>类加载机制</li>
+<li>谈谈对ClassLoader(类加载器)的理解</li>
+<li>谈谈对动态加载（OSGI）的理解</li>
+<li>内存对象的循环引用及避免</li>
+<li>内存回收机制、GC回收策略、GC原理时机以及GC对象</li>
+<li>垃圾回收机制与调用System.gc()区别</li>
+<li>Ubuntu编译安卓系统</li>
+<li>系统启动流程是什么？（提示：Zygote进程 –&gt; SystemServer进程 –&gt; 各种系统服务 –&gt; 应用进程）</li>
+<li>大体说清一个应用程序安装到手机上时发生了什么</li>
+<li>简述Activity启动全部过程</li>
+<li>App启动流程，从点击桌面开始</li>
+<li>逻辑地址与物理地址，为什么使用逻辑地址？</li>
+<li>Android为每个应用程序分配的内存大小是多少？</li>
+<li>Android中进程内存的分配，能不能自己分配定额内存？</li>
+<li>进程保活的方式</li>
+<li>如何保证一个后台服务不被杀死？（相同问题：如何保证service在后台不被kill？）比较省电的方式是什么？</li>
+<li><p>App中唤醒其他进程的实现方式</p>
+<h2 id="四、跨平台Hybrid-开发"><a href="#四、跨平台Hybrid-开发" class="headerlink" title="四、跨平台Hybrid 开发"></a>四、跨平台Hybrid 开发</h2></li>
+<li><p>flutter</p>
+</li>
+<li>Html5项目实战</li>
+<li>HTML&amp;CSS&amp;JavaScript 实战</li>
+<li>WordPress搭建网站项目实战</li>
+<li>前端Vue架构</li>
+<li>前端样式开发</li>
+<li>Weex内置能力</li>
+<li>Weex原生应用</li>
+<li>Weex扩展框架</li>
+<li>WeexUI架构</li>
+<li>介绍你做过的哪些项目</li>
+<li>都使用过哪些框架、平台？</li>
+<li>都使用过哪些自定义控件？</li>
+<li>研究比较深入的领域有哪些？</li>
+<li>对业内信息的关注渠道有哪些？</li>
+<li>最近都读哪些书？</li>
+<li>有没有什么开源项目？</li>
+<li>自己最擅长的技术点，最感兴趣的技术领域和技术点</li>
+<li>项目中用了哪些开源库，如何避免因为引入开源库而导致的安全性和稳定性问题</li>
+<li>实习过程中做了什么，有什么产出？<br>五、小结</li>
+</ol>
+
+                <hr>
+                <div>
+                    <p>
+                        
+                    </p>
+                </div>
+                <br>
+                
+                    <p class="note note-warning">本博客所有文章除特别声明外，均采用 <a href="https://zh.wikipedia.org/wiki/Wikipedia:CC_BY-SA_3.0%E5%8D%8F%E8%AE%AE%E6%96%87%E6%9C%AC">CC BY-SA 3.0协议</a> 。转载请注明出处！</p>
+                
+            </div>
+        </div>
+        <div class="d-none d-md-block col-md-2">
+            
+  <div id="toc" class="py-5">
+    <p class="h6"><i class="iconfont icon-toc" style="vertical-align:middle"></i> Toc:</p> 
+    <div id="tocbot"></div>
+  </div>
+
+        </div>
+    </div>        
+</div>
+
+<br><br><br>
+
+<!-- Comments -->
+<div class="comments" id="comments">
+ 
+</div>
+  
+  </main>
+
+<footer class="mt-5">
+  <div class="text-center py-3">
+    <a href="https://hexo.io" target="_blank"><b>HEXO</b></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://github.com/0x2e/Material-T" target="_blank"> <b>Material-T</b></a>
+  </div>
+</footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/js/jquery-3.3.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/js/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.7.4/js/mdb.min.js"></script>
+  <script src="/js/main.js"></script>
+  
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+    
+    <script src="/js/post.js"></script>
+    
+      <script src="/js/plugins/prettify.js"></script>
+      <script>
+          $(document).ready(function(){
+              $('pre').addClass('prettyprint linenums');
+              prettyPrint();
+          })
+      </script>
+    
+  
+</body>
+</html>
