@@ -1,0 +1,763 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="紫雾凌寒">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前面一篇文章，我们主要是较大家，从下载 IDE、搭建环境，再到将一个简单的Hello World 程序部署在模拟器上。这一篇我们主要来认识 DevEco Studio 和 HarmonyOS 工程的目录结构，以及各目录的作用。 DevEco Studio 配置界面进入IDE后，我们首先了解一下基础的界面。整个IDE的界面和 Android Studio 非常的像， 大致上可以分为四个部分，分别是代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构">
+<meta property="og:url" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/index.html">
+<meta property="og:site_name" content="紫雾凌寒的博客">
+<meta property="og:description" content="前面一篇文章，我们主要是较大家，从下载 IDE、搭建环境，再到将一个简单的Hello World 程序部署在模拟器上。这一篇我们主要来认识 DevEco Studio 和 HarmonyOS 工程的目录结构，以及各目录的作用。 DevEco Studio 配置界面进入IDE后，我们首先了解一下基础的界面。整个IDE的界面和 Android Studio 非常的像， 大致上可以分为四个部分，分别是代">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B1%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B2%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B3%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B4%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B5%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B6%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B7%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B8%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B9%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B10%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B11%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B12%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B13%5D.png">
+<meta property="og:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B14%5D.png">
+<meta property="article:published_time" content="2023-11-17T00:28:40.000Z">
+<meta property="article:modified_time" content="2023-11-17T00:38:31.548Z">
+<meta property="article:author" content="紫雾凌寒">
+<meta property="article:tag" content="HarmonyOS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image.png">
+  
+  
+  
+  <title>初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构 - 紫雾凌寒的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"49256eeefeb14214b7e2c9cdce98c4f4","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?49256eeefeb14214b7e2c9cdce98c4f4";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>紫雾凌寒</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-17 08:28" pubdate>
+          2023年11月17日 早上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>前面一篇文章，我们主要是较大家，从下载 IDE、搭建环境，再到将一个简单的Hello World 程序部署在模拟器上。这一篇我们主要来认识 DevEco Studio 和 HarmonyOS 工程的目录结构，以及各目录的作用。</p>
+<h2 id="DevEco-Studio-配置界面"><a href="#DevEco-Studio-配置界面" class="headerlink" title="DevEco Studio 配置界面"></a>DevEco Studio 配置界面</h2><p>进入IDE后，我们首先了解一下基础的界面。整个IDE的界面和 Android Studio 非常的像， 大致上可以分为四个部分，分别是<br>代码编辑区、通知栏&amp;日志信息展示区、工程目录区 以及 UI预览区。</p>
+<p><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></p>
+<ul>
+<li><p>工程目录区<br>  IDE 左侧为工程目录区，后续章节会详细介绍。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B1%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></p>
+</li>
+<li><p><strong>代码编辑区</strong><br>  中间的是代码编辑区，你可以在这里修改你的代码，以及切换显示的文件。通过按住Ctrl加鼠标滚轮，可以实现界面的放大与缩小。</p>
+</li>
+<li><p><strong>通知栏&amp;日志信息展示区</strong><br>在编辑器底部有一行工具栏，主要介绍常用信息栏，</p>
+<ul>
+<li><strong>Run</strong>: 是项目运行时的信息栏，</li>
+<li><strong>Problems</strong>: 是当前工程错误与提醒信息栏，</li>
+<li><strong>Terminal</strong>: 是命令行终端，在这里执行命令行操作，</li>
+<li><strong>PreviewerLog</strong>: 是预览器日志输出栏，</li>
+<li><strong>Log</strong>: 是模拟器和真机运行时的日志输出栏。在后续使用中会陆续接触。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B2%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></li>
+</ul>
+</li>
+<li><p><strong>UI预览区</strong><br>  点击右上角 <code>Previewer</code>, 可以预览对应的文件UI展示效果。如果是非UI页面点击后会出现预览界面，一定要在UI 文件点击。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B3%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>此外 DevEco Studio 还提供了一些基本功能，包括旋转屏幕，切换显示设备及多设备预览等。单击旋转按钮，可以切换竖屏和横屏显示的效果。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B4%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>也可以单击如下列表按钮，切换显示的设备类型。弹出框内会显示 <code>Available Profiles</code>，即可用的设备类型。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B5%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>如单击 <code>Foldable</code> 切换设备，也可以单击旋转按钮切换 <code>Foldable</code> 的横竖屏显示模式。</p>
+</li>
+</ul>
+<p>打开 <code>Muti-profile preview</code> 开关，可以实现多个尺寸设备的实时预览。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B6%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>单击预览器右上角组件预览按钮，可以进入组件预览界面。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B7%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>组件预览模式可以预览当前组件对应的代码块。</p>
+<p>点击相应组件，代码文件中会框选对应的组件代码部分，下方则对应当前组件的基本属性。</p>
+<p><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B8%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></p>
+<h2 id="了解工程目录结构"><a href="#了解工程目录结构" class="headerlink" title="了解工程目录结构"></a>了解工程目录结构</h2><h3 id="根目录（工程级目录）"><a href="#根目录（工程级目录）" class="headerlink" title="根目录（工程级目录）"></a>根目录（工程级目录）</h3><p><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B9%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br>工程的目录结构如上图，其中详细如下：</p>
+<ul>
+<li><strong>AppScope</strong>：中存放应用全局所需要的资源文件。</li>
+<li><strong>entry</strong>：是应用的主模块，存放HarmonyOS应用的代码、资源等。</li>
+<li><strong>oh_modules</strong>：是工程的依赖包，存放工程依赖的源文件。</li>
+<li><strong>build-profile.json5</strong>：是工程级配置信息，包括签名、产品配置等。</li>
+<li><strong>hvigorfile.ts</strong>：是工程级编译构建任务脚本，hvigor是基于任务管理机制实现的一款全新的自动化构建工具，主要提供任务注册编排，工程模型管理、配置管理等核心能力。</li>
+<li><strong>oh-package.json5</strong>：是工程级依赖配置文件，用于记录引入包的配置信息。</li>
+</ul>
+<p>在 <code>AppScope</code>，其中有 <code>resources</code> 文件夹和配置文件 <code>app.json5</code>。<code>AppScope&gt;resources&gt;base</code> 中包含 <code>element</code> 和 <code>media</code> 两个文件夹，</p>
+<ul>
+<li><strong>element</strong>: 文件夹主要存放公共的字符串、布局文件等资源。</li>
+<li><strong>media</strong>: 存放全局公共的多媒体资源文件。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B10%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></li>
+</ul>
+<h3 id="模块级目录"><a href="#模块级目录" class="headerlink" title="模块级目录"></a>模块级目录</h3><p><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B11%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"><br><code>entry&gt;src</code> 目录中主要包含总的 <code>main</code> 文件夹，单元测试目录 <code>ohosTest</code> ，以及模块级的配置文件。</p>
+<ul>
+<li>main文件夹中，<ul>
+<li>ets文件夹用于存放ets代码</li>
+<li>resources文件存放模块内的多媒体及布局文件等</li>
+<li>module.json5文件为模块的配置文件</li>
+</ul>
+</li>
+<li>ohosTest是单元测试目录。</li>
+<li>build-profile.json5是模块级配置信息，包括编译构建配置项。</li>
+<li>hvigorfile.ts文件是模块级构建脚本。</li>
+<li>oh-package.json5是模块级依赖配置信息文件。</li>
+</ul>
+<ol>
+<li>进入 <code>src&gt;main&gt;ets</code> 目录中，其分为 <code>entryability</code>、<code>pages</code> 两个文件夹。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B12%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></li>
+</ol>
+<ul>
+<li>entryability 存放 ability 文件[关于 ability 我们后面介绍]，用于当前 ability 应用逻辑和生命周期管理。</li>
+<li>pages 存放 UI 界面相关代码文件，初始会生成一个 Index 页面。</li>
+</ul>
+<ol start="2">
+<li>resources 目录下存放模块公共的多媒体、字符串及布局文件等资源，分别存放在 element、media 文件夹中。<br><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B13%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></li>
+</ol>
+<h3 id="app-json5"><a href="#app-json5" class="headerlink" title="app.json5"></a>app.json5</h3><p><code>AppScope&gt;app.json5</code> 是应用的全局的配置文件，用于存放应用公共的配置信息。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;app&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;bundleName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;com.example.myapplication&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//包名</span><br>    <span class="hljs-attr">&quot;vendor&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;example&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//应用长须供应商</span><br>    <span class="hljs-attr">&quot;versionCode&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1000000</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//区分应用版本</span><br>    <span class="hljs-attr">&quot;versionName&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0.0&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//版本号</span><br>    <span class="hljs-attr">&quot;icon&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$media:app_icon&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//应用在桌面显示的图标</span><br>    <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$string:app_name&quot;</span><span class="hljs-comment">//应用名称</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+<h3 id="module-json5"><a href="#module-json5" class="headerlink" title="module.json5"></a>module.json5</h3><p><code>entry&gt;src&gt;main&gt;module.json5</code>是模块的配置文件，包含当前模块的配置信息。</p>
+<p>其中 <code>module</code> 对应的是模块的配置信息，一个模块对应一个打包后的 hap 包，hap 包全称是 <code>HarmonyOS Ability Package</code>，其中包含了 ability、第三方库、资源和配置文件。其具体属性及其描述可以参照如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs json"><br><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;module&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;entry&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//该标签标识当前module的名字，module打包成hap后，表示hap的名称，标签值采用字符串表示（最大长度31个字节），该名称在整个应用要唯一。</span><br>    <br>    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;entry&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//表示模块的类型，类型有三种，分别是entry、feature和har。</span><br>    <br>    <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$string:module_desc&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//当前模块的描述信息。</span><br>    <br>    <span class="hljs-attr">&quot;mainElement&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;EntryAbility&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//该标签标识hap的入口ability名称或者extension名称。只有配置为mainElement的ability或者extension才允许在服务中心露出。</span><br>    <br>    <span class="hljs-attr">&quot;deviceTypes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-comment">//该标签标识hap可以运行在哪类设备上，标签值采用字符串数组的表示。</span><br>      <span class="hljs-string">&quot;phone&quot;</span><span class="hljs-punctuation">,</span><br>      <span class="hljs-string">&quot;tablet&quot;</span><br>    <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>    <br>    <span class="hljs-attr">&quot;deliveryWithInstall&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span> <span class="hljs-comment">//标识当前Module是否在用户主动安装的时候安装，表示该Module对应的HAP是否跟随应用一起安装。- true：主动安装时安装。- false：主动安装时不安装。</span><br>    <br>    <span class="hljs-attr">&quot;installationFree&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span> <span class="hljs-comment">//标识当前Module是否支持免安装特性。- true：表示支持免安装特性，且符合免安装约束。- false：表示不支持免安装特性。</span><br><br>    <span class="hljs-attr">&quot;pages&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$profile:main_pages&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//对应的是main_pages.json文件，用于配置ability中用到的page信息。</span><br><br><br>    <span class="hljs-attr">&quot;abilities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-comment">//是一个数组，存放当前模块中所有的ability元能力的配置信息，其中可以有多个ability。</span><br><br>      <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;EntryAbility&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">//该标签标识当前ability的逻辑名，该名称在整个应用要唯一，标签值采用字符串表示（最大长度127个字节）。</span><br>        <span class="hljs-attr">&quot;srcEntry&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;./ets/entryability/EntryAbility.ts&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-comment">//ability的入口代码路径。</span><br><br>        <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$string:EntryAbility_desc&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//ability的描述信息。</span><br>        <br>        <span class="hljs-attr">&quot;icon&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$media:icon&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//ability的图标。该标签标识ability图标，标签值为资源文件的索引。该标签可缺省，缺省值为空。如果ability被配置为MainElement，该标签必须配置。</span><br><br>        <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$string:EntryAbility_label&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//ability的标签名。</span><br><br>        <span class="hljs-attr">&quot;startWindowIcon&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$media:icon&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//启动页面的图标。</span><br><br>        <span class="hljs-attr">&quot;startWindowBackground&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;$color:start_window_background&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-comment">//启动页面的背景色。</span><br><br>        <span class="hljs-attr">&quot;exported&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;skills&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-comment">//标识能够接收的意图的action值的集合，取值通常为系统预定义的action值，也允许自定义。</span><br><br>          <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;entities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-comment">//标识能够接收的Want的Action值的集合，取值通常为系统预定义的action值，也允许自定义。</span><br>              <span class="hljs-string">&quot;entity.system.home&quot;</span><br>            <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>            <span class="hljs-attr">&quot;actions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-comment">//标识能够接收Want的Entity值的集合。</span><br>              <span class="hljs-string">&quot;action.system.home&quot;</span><br>            <span class="hljs-punctuation">]</span><br>          <span class="hljs-punctuation">&#125;</span><br>        <span class="hljs-punctuation">]</span><br>      <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">]</span><br>  <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="main-pages-json"><a href="#main-pages-json" class="headerlink" title="main_pages.json"></a>main_pages.json</h3><p>src&#x2F;main&#x2F;resources&#x2F;base&#x2F;profile&#x2F;main_pages.json文件保存的是页面page的路径配置信息，所有需要进行路由跳转的page页面都要在这里进行配置。</p>
+<p><img src="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/Image%20%5B14%5D.png" srcset="/img/loading.gif" lazyload alt="HarmonyOS"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/HarmonyOS/" class="category-chain-item">HarmonyOS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/HarmonyOS/" class="print-no-link">#HarmonyOS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构</div>
+      <div>http://example.com/harmonyos/初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>紫雾凌寒</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E6%9E%84%E5%BB%BA%E4%BD%A0%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AAHarmonyOS%20%E5%BA%94%E7%94%A8/" title="初识HarmonyOS——构建你的第一个HarmonyOS应用">
+                        <span class="hidden-mobile">初识HarmonyOS——构建你的第一个HarmonyOS应用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
