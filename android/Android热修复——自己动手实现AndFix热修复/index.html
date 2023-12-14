@@ -16,23 +16,23 @@
   <meta name="author" content="紫雾凌寒">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native">
+    <meta name="description" content="前言前面写过一篇热修复的文章Android热修复——手把手教你实现Android热修复，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android热修复——自己动手实现AndFix热修复">
-<meta property="og:url" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/index.html">
+<meta property="og:url" content="https://terrybthvi.github.io/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/index.html">
 <meta property="og:site_name" content="紫雾凌寒的博客">
-<meta property="og:description" content="前言去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native">
+<meta property="og:description" content="前言前面写过一篇热修复的文章Android热修复——手把手教你实现Android热修复，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
-<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png">
-<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/wx_qrcode.png">
+<meta property="og:image" content="https://terrybthvi.github.io/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
+<meta property="og:image" content="https://terrybthvi.github.io/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png">
+<meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9Wek56NExhdFFNM2czcEI2aFVKODRYRmwxTnFPWlM1ZGJ1NWlhbzJGSzd1TFhqOGdlMDlha2RNWXhpYTZyZFdXbDRENHZGaWEyaWFVQjZpYWU2aWFxUjY5dlM0Zy82NDA?x-oss-process=image/format,png">
 <meta property="article:published_time" content="2023-11-22T08:33:52.000Z">
-<meta property="article:modified_time" content="2023-12-14T02:18:54.526Z">
+<meta property="article:modified_time" content="2023-12-14T08:05:43.092Z">
 <meta property="article:author" content="紫雾凌寒">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="热修复">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
+<meta name="twitter:image" content="https://terrybthvi.github.io/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
   
   
   
@@ -74,7 +74,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"49256eeefeb14214b7e2c9cdce98c4f4","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"terrybthvi.github.io","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"49256eeefeb14214b7e2c9cdce98c4f4","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -127,7 +127,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.0.0"></head>
 
 
 <body>
@@ -318,7 +318,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。</p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前面写过一篇热修复的文章<a href="../Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D">Android热修复——手把手教你实现Android热修复</a>，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。</p>
 <h2 id="1、热修复"><a href="#1、热修复" class="headerlink" title="1、热修复"></a>1、热修复</h2><p>目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native层实现的。一种时需要启动APP，在JAVA层实现的。</p>
 <ul>
 <li><strong>Native层</strong>:andfix sophix  （即时修复  不重启APP）</li>
@@ -363,7 +363,7 @@
 </code></pre>
 <h4 id="定义注解"><a href="#定义注解" class="headerlink" title="定义注解"></a>定义注解</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.bthvi.mycloassloaderapplication;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-meta">@Target(ElementType.METHOD)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Replace &#123;<br>    <span class="hljs-comment">//修复哪一个class</span><br>    String <span class="hljs-title function_">clazz</span><span class="hljs-params">()</span>;<br>    <span class="hljs-comment">//修复哪一个方法</span><br>    String <span class="hljs-title function_">method</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h4 id="修复对应方法所，并给他加上注解"><a href="#修复对应方法所，并给他加上注解" class="headerlink" title="修复对应方法所，并给他加上注解"></a>修复对应方法所，并给他加上注解</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> com.example.bthvi.mycloassloaderapplication.Replace;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * bug测试类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BugClass</span> &#123;<br><br>    <span class="hljs-meta">@Replace(clazz = <span class="hljs-string">&quot;com.example.bthvi.mycloassloaderapplication.xxx.BugClass&quot;</span>,method = <span class="hljs-string">&quot;test&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> int test()&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h4 id="生成dex文件查分包"><a href="#生成dex文件查分包" class="headerlink" title="生成dex文件查分包"></a>生成dex文件查分包</h4><p>   怎么生成dex文件，前面一篇文章以及说过了:<a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/80954639">Android学习——手把手教你实现Android热修复</a>,这里就不多做说明了。</p>
+<h4 id="生成dex文件查分包"><a href="#生成dex文件查分包" class="headerlink" title="生成dex文件查分包"></a>生成dex文件查分包</h4><p>   怎么生成dex文件，前面一篇文章以及说过了:<a href="../Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/">Android学习——手把手教你实现Android热修复</a>,这里就不多做说明了。</p>
 <h4 id="实现修复工具类"><a href="#实现修复工具类" class="headerlink" title="实现修复工具类"></a>实现修复工具类</h4><ul>
 <li>首先我们要拿到对应的已经修复的dex文件，项目中我们肯定是从网络和获取，这里我们之还是定义在本地文件夹下。</li>
 <li>其次我们加载这个Dex文件，拿到它的所有的类，遍历类中的方法，根据注解得到哪些方法时候需要修复的。</li>
@@ -385,9 +385,9 @@
 </ul>
 <blockquote>
 <p>欢迎在评论区留下你的观点大家一起交流，一起成长。如果今天的这篇文章对你在工作和生活有所帮助，欢迎<font color="green"><strong>转发</strong></font>分享给更多人。<br></p>
-<p>同时欢迎大家<font color="green"><strong>扫描左侧边栏的二维码关注我的公众号</strong></font>大家一起学习交流 Android、HarmonyOS等知识。从这里出发我们一起讨论，一起交流，一起提升。</p>
+<p>同时欢迎大家<font color="green"><strong>扫描下方的二维码关注我的公众号</strong></font>大家一起学习交流 Android、HarmonyOS等知识。从这里出发我们一起讨论，一起交流，一起提升。</p>
 </blockquote>
-<p><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/wx_qrcode.png" srcset="/img/loading.gif" lazyload alt="我的公众号"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9Wek56NExhdFFNM2czcEI2aFVKODRYRmwxTnFPWlM1ZGJ1NWlhbzJGSzd1TFhqOGdlMDlha2RNWXhpYTZyZFdXbDRENHZGaWEyaWFVQjZpYWU2aWFxUjY5dlM0Zy82NDA?x-oss-process=image/format,png" srcset="/img/loading.gif" lazyload alt="我的公众号"></p>
 
                 
               </div>
@@ -436,7 +436,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Android热修复——自己动手实现AndFix热修复</div>
-      <div>http://example.com/android/Android热修复——自己动手实现AndFix热修复/</div>
+      <div>https://terrybthvi.github.io/android/Android热修复——自己动手实现AndFix热修复/</div>
     </div>
     <div class="license-meta">
       
