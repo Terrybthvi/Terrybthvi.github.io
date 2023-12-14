@@ -1,0 +1,740 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="紫雾凌寒">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言最近一段时间看了一些关于Android热修复的知识，比如Andfix,Tinker,Sophix等，看了这些框架的原理，就想着自己能不能手撸一个简单的demo。下面我们就来自己动手实现Android热修复吧。 热修复实现原理   所谓热修复就是，在我们应用上线后出现小bug需要及时修复时，不用再发新的安装包，只需要发布补丁包，在客户不知不觉之间修复掉bug，JAVA虚拟机JVM在运行时，加载的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android热修复——手把手教你实现Android热修复">
+<meta property="og:url" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/index.html">
+<meta property="og:site_name" content="紫雾凌寒的博客">
+<meta property="og:description" content="前言最近一段时间看了一些关于Android热修复的知识，比如Andfix,Tinker,Sophix等，看了这些框架的原理，就想着自己能不能手撸一个简单的demo。下面我们就来自己动手实现Android热修复吧。 热修复实现原理   所谓热修复就是，在我们应用上线后出现小bug需要及时修复时，不用再发新的安装包，只需要发布补丁包，在客户不知不觉之间修复掉bug，JAVA虚拟机JVM在运行时，加载的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.jpg">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img3.jpg">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img4.jpg">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img4.png">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img5.png">
+<meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9Wek56NExhdFFNM2czcEI2aFVKODRYRmwxTnFPWlM1ZGJ1NWlhbzJGSzd1TFhqOGdlMDlha2RNWXhpYTZyZFdXbDRENHZGaWEyaWFVQjZpYWU2aWFxUjY5dlM0Zy82NDA?x-oss-process=image/format,png">
+<meta property="article:published_time" content="2023-11-20T08:33:52.000Z">
+<meta property="article:modified_time" content="2023-12-14T02:18:52.287Z">
+<meta property="article:author" content="紫雾凌寒">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="热修复">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.jpg">
+  
+  
+  
+  <title>Android热修复——手把手教你实现Android热修复 - 紫雾凌寒的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"49256eeefeb14214b7e2c9cdce98c4f4","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?49256eeefeb14214b7e2c9cdce98c4f4";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>紫雾凌寒</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/post.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android热修复——手把手教你实现Android热修复"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-20 16:33" pubdate>
+          2023年11月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          75 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Android热修复——手把手教你实现Android热修复</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一段时间看了一些关于Android热修复的知识，比如Andfix,Tinker,Sophix等，看了这些框架的原理，就想着自己能不能手撸一个简单的demo。下面我们就来自己动手实现Android热修复吧。</p>
+<h2 id="热修复实现原理"><a href="#热修复实现原理" class="headerlink" title="热修复实现原理"></a>热修复实现原理</h2><p>   所谓热修复就是，在我们应用上线后出现小bug需要及时修复时，不用再发新的安装包，只需要发布补丁包，在客户不知不觉之间修复掉bug，JAVA虚拟机JVM在运行时，加载的是.classes的字节码文件。而Android也有自己的虚拟机Dalvik&#x2F;ART虚拟机，不过他们加载的是dex文件，但是他们的工作原理都一样，都是经过ClassLoader类加载器。Android在ClassLoader的基础上又定义类PathClassLoader和DexClassLoader，两者都继承自BaseDexClassLoader，下面我们看下他们间的区别：</p>
+<ul>
+<li><code>BaseDexClassLoader</code>源代码位于<code>libcore\dalvik\src\main\java\dalvik\system\BaseDexClassLoader.java</code>。</li>
+<li><code>PathClassLoader</code>源代码位于<code>libcore\dalvik\src\main\Java\dalvik\system\PathClassLoader.java </code>。他主要用来加载系统类和应用类。</li>
+<li><code>DexClassLoader</code>源代码位于<code>libcore\dalvik\src\main\java\dalvik\system\DexClassLoader.java</code>。用来加载jar、apk、dex文件.加载jar、apk也是最终抽取里面的Dex文件进行加载.<br>   <img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.jpg" srcset="/img/loading.gif" lazyload alt="ClassLoader"><br>Android热修复目前各大厂商都有自己的热修复工具，主要分为两大主流以阿里为代表的<strong>Native层</strong>替换方法表中的方法实现热修复［AndFix ,Sophix等］,和以腾讯美团为代表的在<strong>JAVA层</strong>实现热修复[Tinker，Robust等]。后者要实现热修复必须要重启APP，而前者则不需要重启APP，直接在虚拟机的方法区实现方法替换。<br><font color="red">本文主要实现的是在JAVA层实现热修复，也就是重启APP才能生效。关于Native层实现热修复有兴趣的可以看我的另一篇文章：<a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/96644721"><br>Android热修复——手把手教你实现Andfix热修复</a></font></li>
+</ul>
+<h2 id="手写Android热修复框架"><a href="#手写Android热修复框架" class="headerlink" title="手写Android热修复框架"></a>手写Android热修复框架</h2><p>下面我们一步一步来实现Android热修复。</p>
+<h3 id="写一个专门带有bug的类"><a href="#写一个专门带有bug的类" class="headerlink" title="写一个专门带有bug的类"></a>写一个专门带有bug的类</h3><p>既然要测试热修复，我们肯定要写一个带有bug的类。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">package com.example.<span class="hljs-keyword">bthvi.mycloassloaderapplication.xxx;</span><br><span class="hljs-keyword"></span><br>import <span class="hljs-keyword">android.content.Context;</span><br><span class="hljs-keyword"></span>import <span class="hljs-keyword">android.view.View;</span><br><span class="hljs-keyword"></span>import <span class="hljs-keyword">android.widget.Toast;</span><br><span class="hljs-keyword"></span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * bug测试类</span><br><span class="hljs-comment"> */</span><br>public class <span class="hljs-keyword">BugClass </span>&#123;<br><br>    public <span class="hljs-keyword">BugClass(Context </span><span class="hljs-built_in">context</span>)&#123;<br>        Toast.makeText(<span class="hljs-built_in">context</span>,<span class="hljs-string">&quot;这是一个优美的bug！&quot;</span>,Toast.LENGTH_SHORT).<span class="hljs-keyword">show();</span><br><span class="hljs-keyword"></span>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下面我们要写一个热修复的核心工具类。</p>
+<h3 id="热修复核心类"><a href="#热修复核心类" class="headerlink" title="热修复核心类"></a>热修复核心类</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.bthvi.mycloassloaderapplication;<br><br><span class="hljs-keyword">import</span> android.content.Context;<br><span class="hljs-keyword">import</span> android.os.Environment;<br><span class="hljs-keyword">import</span> android.support.annotation.NonNull;<br><span class="hljs-keyword">import</span> android.widget.Toast;<br><br><span class="hljs-keyword">import</span> java.io.File;<br><span class="hljs-keyword">import</span> java.lang.reflect.Array;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.util.HashSet;<br><br><span class="hljs-keyword">import</span> dalvik.system.DexClassLoader;<br><span class="hljs-keyword">import</span> dalvik.system.PathClassLoader;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FixDexUtil</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">DEX_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.dex&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">APK_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.apk&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">JAR_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.jar&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ZIP_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.zip&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">DEX_DIR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;odex&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">OPTIMIZE_DEX_DIR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;optimize_dex&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> HashSet&lt;File&gt; loadedDex = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashSet</span>&lt;&gt;();<br><br>    <span class="hljs-keyword">static</span> &#123;<br>        loadedDex.clear();<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 加载补丁，使用默认目录：data/data/包名/files/odex</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> context</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadFixedDex</span><span class="hljs-params">(Context context)</span> &#123;<br>        loadFixedDex(context, <span class="hljs-literal">null</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 加载补丁</span><br><span class="hljs-comment">     *</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> context       上下文</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> patchFilesDir 补丁所在目录</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadFixedDex</span><span class="hljs-params">(Context context, File patchFilesDir)</span> &#123;<br>        <span class="hljs-comment">// dex合并之前的dex</span><br>        doDexInject(context, loadedDex);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     *<span class="hljs-doctag">@author</span> bthvi</span><br><span class="hljs-comment">     *<span class="hljs-doctag">@time</span> 2018/6/25 0025 15:51</span><br><span class="hljs-comment">     *<span class="hljs-doctag">@desc</span> 验证是否需要热修复</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isGoingToFix</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Context context)</span> &#123;<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">canFix</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">externalStorageDirectory</span> <span class="hljs-operator">=</span> Environment.getExternalStorageDirectory();<br><br>        <span class="hljs-comment">// 遍历所有的修复dex , 因为可能是多个dex修复包</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">fileDir</span> <span class="hljs-operator">=</span> externalStorageDirectory != <span class="hljs-literal">null</span> ?<br>                <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(externalStorageDirectory,<span class="hljs-string">&quot;007&quot;</span>):<br>                <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(context.getFilesDir(), DEX_DIR);<span class="hljs-comment">// data/data/包名/files/odex（这个可以任意位置）</span><br><br>        File[] listFiles = fileDir.listFiles();<br>        <span class="hljs-keyword">if</span> (listFiles != <span class="hljs-literal">null</span>)&#123;<br>            <span class="hljs-keyword">for</span> (File file : listFiles) &#123;<br>                <span class="hljs-keyword">if</span> (file.getName().startsWith(<span class="hljs-string">&quot;classes&quot;</span>) &amp;&amp;<br>                        (file.getName().endsWith(DEX_SUFFIX)<br>                                || file.getName().endsWith(APK_SUFFIX)<br>                                || file.getName().endsWith(JAR_SUFFIX)<br>                                || file.getName().endsWith(ZIP_SUFFIX))) &#123;<br><br>                    loadedDex.add(file);<span class="hljs-comment">// 存入集合</span><br>                    <span class="hljs-comment">//有目标dex文件, 需要修复</span><br>                    canFix = <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> canFix;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">doDexInject</span><span class="hljs-params">(Context appContext, HashSet&lt;File&gt; loadedDex)</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">optimizeDir</span> <span class="hljs-operator">=</span> appContext.getFilesDir().getAbsolutePath() +<br>                File.separator + OPTIMIZE_DEX_DIR;<br>        <span class="hljs-comment">// data/data/包名/files/optimize_dex（这个必须是自己程序下的目录）</span><br><br>        <span class="hljs-type">File</span> <span class="hljs-variable">fopt</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(optimizeDir);<br>        <span class="hljs-keyword">if</span> (!fopt.exists()) &#123;<br>            fopt.mkdirs();<br>        &#125;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">// 1.加载应用程序dex的Loader</span><br>            <span class="hljs-type">PathClassLoader</span> <span class="hljs-variable">pathLoader</span> <span class="hljs-operator">=</span> (PathClassLoader) appContext.getClassLoader();<br>            <span class="hljs-keyword">for</span> (File dex : loadedDex) &#123;<br>                <span class="hljs-comment">// 2.加载指定的修复的dex文件的Loader</span><br>                <span class="hljs-type">DexClassLoader</span> <span class="hljs-variable">dexLoader</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DexClassLoader</span>(<br>                        dex.getAbsolutePath(),<span class="hljs-comment">// 修复好的dex（补丁）所在目录</span><br>                        fopt.getAbsolutePath(),<span class="hljs-comment">// 存放dex的解压目录（用于jar、zip、apk格式的补丁）</span><br>                        <span class="hljs-literal">null</span>,<span class="hljs-comment">// 加载dex时需要的库</span><br>                        pathLoader<span class="hljs-comment">// 父类加载器</span><br>                );<br>                <span class="hljs-comment">// 3.开始合并</span><br>                <span class="hljs-comment">// 合并的目标是Element[],重新赋值它的值即可</span><br><br>                <span class="hljs-comment">/**</span><br><span class="hljs-comment">                 * BaseDexClassLoader中有 变量: DexPathList pathList</span><br><span class="hljs-comment">                 * DexPathList中有 变量 Element[] dexElements</span><br><span class="hljs-comment">                 * 依次反射即可</span><br><span class="hljs-comment">                 */</span><br><br>                <span class="hljs-comment">//3.1 准备好pathList的引用</span><br>                <span class="hljs-type">Object</span> <span class="hljs-variable">dexPathList</span> <span class="hljs-operator">=</span> getPathList(dexLoader);<br>                <span class="hljs-type">Object</span> <span class="hljs-variable">pathPathList</span> <span class="hljs-operator">=</span> getPathList(pathLoader);<br>                <span class="hljs-comment">//3.2 从pathList中反射出element集合</span><br>                <span class="hljs-type">Object</span> <span class="hljs-variable">leftDexElements</span> <span class="hljs-operator">=</span> getDexElements(dexPathList);<br>                <span class="hljs-type">Object</span> <span class="hljs-variable">rightDexElements</span> <span class="hljs-operator">=</span> getDexElements(pathPathList);<br>                <span class="hljs-comment">//3.3 合并两个dex数组</span><br>                <span class="hljs-type">Object</span> <span class="hljs-variable">dexElements</span> <span class="hljs-operator">=</span> combineArray(leftDexElements, rightDexElements);<br><br>                <span class="hljs-comment">// 重写给PathList里面的Element[] dexElements;赋值</span><br>                <span class="hljs-type">Object</span> <span class="hljs-variable">pathList</span> <span class="hljs-operator">=</span> getPathList(pathLoader);<span class="hljs-comment">// 一定要重新获取，不要用pathPathList，会报错</span><br>                setField(pathList, pathList.getClass(), <span class="hljs-string">&quot;dexElements&quot;</span>, dexElements);<br>            &#125;<br>            Toast.makeText(appContext, <span class="hljs-string">&quot;修复完成&quot;</span>, Toast.LENGTH_SHORT).show();<br>        &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 反射给对象中的属性重新赋值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setField</span><span class="hljs-params">(Object obj, Class&lt;?&gt; cl, String field, Object value)</span> <span class="hljs-keyword">throws</span> NoSuchFieldException, IllegalAccessException &#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">declaredField</span> <span class="hljs-operator">=</span> cl.getDeclaredField(field);<br>        declaredField.setAccessible(<span class="hljs-literal">true</span>);<br>        declaredField.set(obj, value);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 反射得到对象中的属性值</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getField</span><span class="hljs-params">(Object obj, Class&lt;?&gt; cl, String field)</span> <span class="hljs-keyword">throws</span> NoSuchFieldException, IllegalAccessException &#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">localField</span> <span class="hljs-operator">=</span> cl.getDeclaredField(field);<br>        localField.setAccessible(<span class="hljs-literal">true</span>);<br>        <span class="hljs-keyword">return</span> localField.get(obj);<br>    &#125;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 反射得到类加载器中的pathList对象</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getPathList</span><span class="hljs-params">(Object baseDexClassLoader)</span> <span class="hljs-keyword">throws</span> ClassNotFoundException, NoSuchFieldException, IllegalAccessException &#123;<br>        <span class="hljs-keyword">return</span> getField(baseDexClassLoader, Class.forName(<span class="hljs-string">&quot;dalvik.system.BaseDexClassLoader&quot;</span>), <span class="hljs-string">&quot;pathList&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 反射得到pathList中的dexElements</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getDexElements</span><span class="hljs-params">(Object pathList)</span> <span class="hljs-keyword">throws</span> NoSuchFieldException, IllegalAccessException &#123;<br>        <span class="hljs-keyword">return</span> getField(pathList, pathList.getClass(), <span class="hljs-string">&quot;dexElements&quot;</span>);<br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 数组合并</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">combineArray</span><span class="hljs-params">(Object arrayLhs, Object arrayRhs)</span> &#123;<br>        Class&lt;?&gt; clazz = arrayLhs.getClass().getComponentType();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> Array.getLength(arrayLhs);<span class="hljs-comment">// 得到左数组长度（补丁数组）</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> Array.getLength(arrayRhs);<span class="hljs-comment">// 得到原dex数组长度</span><br>        <span class="hljs-type">int</span> <span class="hljs-variable">k</span> <span class="hljs-operator">=</span> i + j;<span class="hljs-comment">// 得到总数组长度（补丁数组+原dex数组）</span><br>        <span class="hljs-type">Object</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> Array.newInstance(clazz, k);<span class="hljs-comment">// 创建一个类型为clazz，长度为k的新数组</span><br>        System.arraycopy(arrayLhs, <span class="hljs-number">0</span>, result, <span class="hljs-number">0</span>, i);<br>        System.arraycopy(arrayRhs, <span class="hljs-number">0</span>, result, i, j);<br>        <span class="hljs-keyword">return</span> result;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+<p>我们这里暂且指定热修复目录<code>007</code>，下面我们看一下如何调用。</p>
+<h3 id="Splash页面调用检查热修复"><a href="#Splash页面调用检查热修复" class="headerlink" title="Splash页面调用检查热修复"></a>Splash页面调用检查热修复</h3><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">    <span class="hljs-keyword">private</span> void init<span class="hljs-literal">()</span> &#123;<br>        File externalStorageDirectory = <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">Environment</span>.</span></span>get<span class="hljs-constructor">ExternalStorageDirectory()</span>;<br><br>    <span class="hljs-comment">// 遍历所有的修复dex , 因为可能是多个dex修复包</span><br>    File fileDir = externalStorageDirectory != null ?<br>            <span class="hljs-keyword">new</span> <span class="hljs-constructor">File(<span class="hljs-params">externalStorageDirectory</span>,<span class="hljs-string">&quot;007&quot;</span>)</span>:<br>            <span class="hljs-keyword">new</span> <span class="hljs-constructor">File(<span class="hljs-params">getFilesDir</span>()</span>, FixDexUtil.DEX_DIR);<span class="hljs-comment">// data/user/0/包名/files/odex（这个可以任意位置）</span><br>        <span class="hljs-keyword">if</span> (!fileDir.exists<span class="hljs-literal">()</span>)&#123;<br>        fileDir.mkdirs<span class="hljs-literal">()</span>;<br>    &#125;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FixDexUtil</span>.</span></span>is<span class="hljs-constructor">GoingToFix(<span class="hljs-params">this</span>)</span>) &#123;<br><br>        <span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">FixDexUtil</span>.</span></span>load<span class="hljs-constructor">FixedDex(<span class="hljs-params">this</span>, Environment.<span class="hljs-params">getExternalStorageDirectory</span>()</span>);<br>        textView.set<span class="hljs-constructor">Text(<span class="hljs-string">&quot;正在修复。。。。&quot;</span>)</span>;<br><br>    &#125;<br>     <span class="hljs-keyword">new</span> <span class="hljs-constructor">Handler()</span>.post<span class="hljs-constructor">Delayed(<span class="hljs-params">new</span> Runnable()</span> &#123;<br>        @Override<br>        public void run<span class="hljs-literal">()</span> &#123;<br>            start<span class="hljs-constructor">Activity(<span class="hljs-params">new</span> Intent(SplashActivity.<span class="hljs-params">this</span>,MainActivity.<span class="hljs-params">class</span>)</span>);<br>            finish<span class="hljs-literal">()</span>;<br>        &#125;<br>    &#125;,<span class="hljs-number">3000</span>);<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>下面我们先来看下有bug时的APP。<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png" srcset="/img/loading.gif" lazyload alt="bug截图"></p>
+<h3 id="在出bug的对应类修复bug"><a href="#在出bug的对应类修复bug" class="headerlink" title="在出bug的对应类修复bug"></a>在出bug的对应类修复bug</h3><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">package com.example.<span class="hljs-keyword">bthvi.mycloassloaderapplication.xxx;</span><br><span class="hljs-keyword"></span><br>import <span class="hljs-keyword">android.content.Context;</span><br><span class="hljs-keyword"></span>import <span class="hljs-keyword">android.view.View;</span><br><span class="hljs-keyword"></span>import <span class="hljs-keyword">android.widget.Toast;</span><br><span class="hljs-keyword"></span><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * bug测试类</span><br><span class="hljs-comment"> */</span><br>public class <span class="hljs-keyword">BugClass </span>&#123;<br><br>    public <span class="hljs-keyword">BugClass(Context </span><span class="hljs-built_in">context</span>)&#123;<br>        Toast.makeText(<span class="hljs-built_in">context</span>,<span class="hljs-string">&quot;你很优秀！bug已修复?&quot;</span>,Toast.LENGTH_SHORT).<span class="hljs-keyword">show();</span><br><span class="hljs-keyword"></span>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>修改好bug之后我们需要打出补丁包。</p>
+<h3 id="打出热修复补丁包"><a href="#打出热修复补丁包" class="headerlink" title="打出热修复补丁包"></a>打出热修复补丁包</h3><h4 id="在AndroidStudio里面关闭掉Instant-Run"><a href="#在AndroidStudio里面关闭掉Instant-Run" class="headerlink" title="在AndroidStudio里面关闭掉Instant_Run"></a>在AndroidStudio里面关闭掉Instant_Run</h4><p>由于Android Studio的instan run的原理也是热修复，所以安装的时候不会安装完整的安装包，只会安装新改变的代码。<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img3.jpg" srcset="/img/loading.gif" lazyload alt="instant run"></p>
+<h4 id="重新编译并拷贝出新修改的类"><a href="#重新编译并拷贝出新修改的类" class="headerlink" title="重新编译并拷贝出新修改的类"></a>重新编译并拷贝出新修改的类</h4><p>首先点击<code>Build-&gt;RebuildProject</code>来重新构建,构建完成之后,可以在<code>app/build/interintermediate/debug/包名/</code>找到你刚刚修改的class文件,将他拷贝出来,要连同包名路径一起拷贝出来。<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img4.jpg" srcset="/img/loading.gif" lazyload alt="RebuildProject"></p>
+<h4 id="将class文件打包成dex文件"><a href="#将class文件打包成dex文件" class="headerlink" title="将class文件打包成dex文件"></a>将class文件打包成dex文件</h4><p>我们前面知道热修复的原理是Dalvik&#x2F;ART加载dex文件，所以接下来我们要将class文件打包成dex文件，首先我们找到AndroidSDK的build-tools 目录下，在控制台下进入该目录下的任意一个版本，执行dx命令，关于dx命令的使用帮助可以使用<code>dx -- help</code>,下面们通过 <code>dx --dex [指定输出路径]/classes.dex  [刚才拷贝的修复bug的类及包名的目录]</code>这样我们就得到了.dex文件。</p>
+<h4 id="将打出来的dex文件放至我们指定的目录下"><a href="#将打出来的dex文件放至我们指定的目录下" class="headerlink" title="将打出来的dex文件放至我们指定的目录下"></a>将打出来的dex文件放至我们指定的目录下</h4><p>我们将打出来的dex文件放在我们指定的目录<code>007</code>下，当然这个目录也可以是包名。<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img4.png" srcset="/img/loading.gif" lazyload alt="存储至手机SDK卡"></p>
+<h4 id="重新启动有bug的APP"><a href="#重新启动有bug的APP" class="headerlink" title="重新启动有bug的APP"></a>重新启动有bug的APP</h4><p>我们启动就会后发现bug已经修复了<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/img5.png" srcset="/img/loading.gif" lazyload alt="修复完成截图"></p>
+<h2 id="没有修复？"><a href="#没有修复？" class="headerlink" title="没有修复？"></a>没有修复？</h2><p><font color="red" size="5">很多同学反馈说没有修复，我觉得主要还是要检查下 isGoingToFix方法，因为这个方法中有一个判断是需要判断目标路径下，修复包的名称一定要为classes开头，以dex结尾</font></p>
+<pre><code class="hljs">           if (file.getName().startsWith(&quot;classes&quot;) &amp;&amp;
+                    (file.getName().endsWith(DEX_SUFFIX)
+                            || file.getName().endsWith(APK_SUFFIX)
+                            || file.getName().endsWith(JAR_SUFFIX)
+                            || file.getName().endsWith(ZIP_SUFFIX))) &#123;
+                            &#125;
+</code></pre>
+<h2 id="其他文章"><a href="#其他文章" class="headerlink" title="其他文章"></a>其他文章</h2><h4 id="1、Gradle"><a href="#1、Gradle" class="headerlink" title="1、Gradle"></a>1、Gradle</h4><p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/52355915">gradle 详解——你真的了解Gradle吗？</a></p>
+<p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/51918534">一分钟帮你提升Android studio 编译速度</a></p>
+<h4 id="2、Flutter"><a href="#2、Flutter" class="headerlink" title="2、Flutter"></a>2、Flutter</h4><p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/80474494">Flutter从入门到实战</a></p>
+<h4 id="3、源码"><a href="#3、源码" class="headerlink" title="3、源码"></a>3、源码</h4><p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/89181005">深入理解HashMap原理(一)——HashMap源码解析(JDK 1.8)</a></p>
+<p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/89354198">深入理解HashMap原理(二)——手写HashMap</a></p>
+<p><a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/81809890">Handler 源码解析——Handler的创建</a></p>
+<h4 id="4、热修复"><a href="#4、热修复" class="headerlink" title="4、热修复"></a>4、热修复</h4><p> <a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/80954639">Android学习——手把手教你实现Android热修复</a></p>
+<p> <a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/96644721">Android热修复——深入剖析AndFix热修复及自己动手实现</a></p>
+<p> <a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/95076522">手撸一款Android屏幕适配SDK</a><br> <a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/80878256">Android自定义无压缩加载超清大图</a></p>
+<blockquote>
+<p>欢迎在评论区留下你的观点大家一起交流，一起成长。如果今天的这篇文章对你在工作和生活有所帮助，欢迎<font color="green"><strong>转发</strong></font>分享给更多人。<br></p>
+<p>同时欢迎大家<font color="green"><strong>扫描左侧边栏的二维码关注我的公众号</strong></font>大家一起学习交流 Android、HarmonyOS等知识。从这里出发我们一起讨论，一起交流，一起提升。</p>
+</blockquote>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9tbWJpei5xcGljLmNuL21tYml6X3BuZy9Wek56NExhdFFNM2czcEI2aFVKODRYRmwxTnFPWlM1ZGJ1NWlhbzJGSzd1TFhqOGdlMDlha2RNWXhpYTZyZFdXbDRENHZGaWEyaWFVQjZpYWU2aWFxUjY5dlM0Zy82NDA?x-oss-process=image/format,png" srcset="/img/loading.gif" lazyload alt="我的公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/" class="print-no-link">#热修复</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Android热修复——手把手教你实现Android热修复</div>
+      <div>http://example.com/android/Android热修复——手把手教你实现Android热修复/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>紫雾凌寒</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月20日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/" title="Android热修复——自己动手实现AndFix热修复">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Android热修复——自己动手实现AndFix热修复</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&amp;%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/" title="初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构">
+                        <span class="hidden-mobile">初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -264,6 +264,327 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94ViewGroup%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/" target="_self">
+          Android源码分析——ViewGroup的事件分发机制
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94ViewGroup%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/" target="_self">
+        <div>
+          通过前一篇博客View的事件分发机制，从dispatchTouchEvent说起（一）的介绍相信大家对 Android View 事件的分发机制有了很深的理解。我们知道 Android 中 View 是存在于 Activity。 今天我们继续学习 Activity 到 ViewGroup 的事件分发机制。 一、Activity 分发到 ViewGroup当我们手指触摸到屏幕时，最先接收到事件的肯定
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-25 16:33" pubdate>
+              2023-11-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">#源码解析</a>
+            
+              <a href="/tags/View/">#View</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94View%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/" target="_self">
+          Android源码分析——View的事件分发机制
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94View%E7%9A%84%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%9C%BA%E5%88%B6/" target="_self">
+        <div>
+          事件分发机制是android中的核心知识点和难点。相信很多人也和我一样对于这点感到非常困惑。我看了很多篇博客和书面资料。今天我们就聊聊事件的分发机制。 一、点击事件的传递规则1、什么是点击事件（MotionEvent）在了解点击事件的传递规则之前，我们首先要弄明白什么事点击事件（MotionEvent），所谓MotionEvent是指手指接触屏幕后所产生的一系列事件。 ACTION_DOWN———
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-24 16:33" pubdate>
+              2023-11-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">#源码解析</a>
+            
+              <a href="/tags/View/">#View</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94View%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%B1%8F%E5%B9%95%E7%9A%84/" target="_self">
+          Android源码分析——View是如何被添加到屏幕的
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94View%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%B1%8F%E5%B9%95%E7%9A%84/" target="_self">
+        <div>
+          前言在 Android 中，我们知道我们能看到的界面都是 Activity ，但是我们能看到的这些 View 是如何被添加到View中的昵？今天这篇文章我们就通过源码来追踪溯源，看看 View 究竟是如何被添加到手机屏幕上的。本文篇幅较长请大家耐心阅读。 View 被添加到Activity的步骤我们写一个Activity的时候一般都是如下所示的写法来将资源资源加载到了Activity 。 123
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-23 16:33" pubdate>
+              2023-11-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">#源码解析</a>
+            
+              <a href="/tags/View/">#View</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/" target="_self">
+          Android热修复——自己动手实现AndFix热修复
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/" target="_self">
+        <div>
+          前言去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-22 16:33" pubdate>
+              2023-11-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/">#热修复</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/" target="_self">
+          Android热修复——手把手教你实现Android热修复
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/" target="_self">
+        <div>
+          前言最近一段时间看了一些关于Android热修复的知识，比如Andfix,Tinker,Sophix等，看了这些框架的原理，就想着自己能不能手撸一个简单的demo。下面我们就来自己动手实现Android热修复吧。 热修复实现原理   所谓热修复就是，在我们应用上线后出现小bug需要及时修复时，不用再发新的安装包，只需要发布补丁包，在客户不知不觉之间修复掉bug，JAVA虚拟机JVM在运行时，加载的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-11-20 16:33" pubdate>
+              2023-11-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/">#热修复</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/harmonyos/%E5%88%9D%E8%AF%86HarmonyOS%E2%80%94%E2%80%94%E8%AE%A4%E8%AF%86DevEco%20Studio%20&amp;%20HarmonyOS%E5%B7%A5%E7%A8%8B%E7%BB%93%E6%9E%84/" target="_self">
           初识HarmonyOS——认识DevEco Studio &amp; HarmonyOS工程结构
         </a>

@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/icon.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="紫雾凌寒">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android热修复——自己动手实现AndFix热修复">
+<meta property="og:url" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/index.html">
+<meta property="og:site_name" content="紫雾凌寒的博客">
+<meta property="og:description" content="前言去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。 1、热修复目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png">
+<meta property="og:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/wx_qrcode.png">
+<meta property="article:published_time" content="2023-11-22T08:33:52.000Z">
+<meta property="article:modified_time" content="2023-12-14T02:18:54.526Z">
+<meta property="article:author" content="紫雾凌寒">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="热修复">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png">
+  
+  
+  
+  <title>Android热修复——自己动手实现AndFix热修复 - 紫雾凌寒的博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5","typing":{"enable":true,"typeSpeed":80,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":"49256eeefeb14214b7e2c9cdce98c4f4","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?49256eeefeb14214b7e2c9cdce98c4f4";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', '');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>紫雾凌寒</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/post.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android热修复——自己动手实现AndFix热修复"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-11-22 16:33" pubdate>
+          2023年11月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          94 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Android热修复——自己动手实现AndFix热修复</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>去年写过一篇热修复的文章，那时候刚开始接触，照猫画虎画的还算比较成功。但是那种修复需要重新启动APP，也就是在JAVA层实现的热修复。我们知道目前Android主流的修复还有在Native层实现修复的，就是在Native层替换方法，不用重新启动APP。今天写了个Demo，下面主要分享一下它的主要原理。</p>
+<h2 id="1、热修复"><a href="#1、热修复" class="headerlink" title="1、热修复"></a>1、热修复</h2><p>目前，热修复的原理主要有两种技术,一是不需要启动APP就能实现修复，在Native层实现的。一种时需要启动APP，在JAVA层实现的。</p>
+<ul>
+<li><strong>Native层</strong>:andfix sophix  （即时修复  不重启APP）</li>
+<li><strong>JAVA层</strong>:Tinker robust等（需要启动APP）</li>
+</ul>
+<h3 id="出现异常的根源在于方法"><a href="#出现异常的根源在于方法" class="headerlink" title="出现异常的根源在于方法"></a>出现异常的根源在于方法</h3><p>我们的程序出现异常(BUG)的根源是什么？为什么会出现异常呢，要出现异常肯定是我们程序中的<strong>某个方法</strong>抛出了异常，所以异常的根源是<font color="red" style="blod"><strong>方法</strong></font>。那么我们修复包的目的就是去替换异常的方法所在的包名类名下的方法。我们需要准确的找到这个方法，那么我们怎么去找这个方法呢？</p>
+<h3 id="如何替换已经运行的APK-？"><a href="#如何替换已经运行的APK-？" class="headerlink" title="如何替换已经运行的APK ？"></a>如何替换已经运行的APK ？</h3><p>是直接替换运行时的APK加载的有bug的类吗？显然不行，因为<strong>Java的懒加载机制，在不启动APP时新类不能替换老的类</strong>。class类只被ClassLoader加载一次，所以已经有bug的类,再不启动APP的情况下我们不能直接再虚拟机中替换。那我们要怎么去做呢？我们根据JAVA的内存运行机制来寻找有没有突破口。</p>
+<h2 id="2、class加载-内存运行机制"><a href="#2、class加载-内存运行机制" class="headerlink" title="2、class加载(内存运行机制)"></a>2、class加载(内存运行机制)</h2><p>Java虚拟机（JVM）在java程序运行的过程中，会将它所管理的内存划分为若干个不同的数据区域，这些区域有的随着JVM的启动而创建，有的随着用户线程的启动和结束而建立和销毁。一个基本的JVM运行时内存模型如下所示：<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img1.png" srcset="/img/loading.gif" lazyload alt="img"><br>我们分别看下它的运行时数据区</p>
+<ul>
+<li><strong>方法区</strong>：class会被加载到方法区，当JVM使用类加载器定位class文件，并将其载入到内存中，会提取class文件的类型信息，并将这些信息存储到方法区中，同时，放入方法区中的还有该类型中的类静态变量。【方法表，静态变量，】</li>
+<li><strong>堆区</strong>： Java程序在运行时创建的所有类型对象和数组都存储在堆中&#x2F;JVM会根据new指令在堆中开辟一个确定类型的对象内存空间。但是堆中开辟对象的空间并没有任何人工指令可以回收，而是通过JVM的垃圾回收器负责回收。</li>
+<li><strong>栈区</strong>：方法的执行是在虚拟机，Java方法执行存储在栈区，每个Java方法对应一个栈帧。每启动一个线程，JVM都会为它分配一个Java栈，用于存放方法中的<strong>局部变量，操作数以及异常数据</strong>等。当线程调用某个方法时，JVM会根据方法区中该方法的字节码组建一个栈帧，并将该栈帧压入Java栈中，方法执行完毕时，JVM会弹出该方法栈并释放掉。</li>
+<li>**本地方法栈(Native 堆)**： 本地方法栈的功能和特点类似于虚拟机栈，不同的是，本地方法栈服务的对象是JVM执行的native方法，而虚拟机栈服务的是JVM执行的java方法。</li>
+<li><strong>程序计数器(PC寄存器)<strong>：</strong>程序计数器是一个记录着当前线程所执行的字节码的行号指示器。</strong> JAVA代码编译后的字节码在未经过JIT（实时编译器）编译前，其执行方式是通过“字节码解释器”进行解释执行。简单的工作原理为解释器读取装载入内存的字节码，按照顺序读取字节码指令。读取一个指令后，将该指令“翻译”成固定的操作，并根据这些操作进行分支、循环、跳转等流程。</li>
+</ul>
+<p>当手指触摸APP ICON启动APP的流程如下：<br><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/img2.png" srcset="/img/loading.gif" lazyload alt="启动流程"><br>类加载之前有个，int型符号变量指向class内存区域，即将要加载class类信息。（字节码文件内有方法、成员变量）</p>
+<h3 id="加载过程由文件变成内存的过程"><a href="#加载过程由文件变成内存的过程" class="headerlink" title="加载过程由文件变成内存的过程"></a>加载过程由文件变成内存的过程</h3><ol>
+<li>加载ActivityThread 生成方法表</li>
+<li>加载main()函数</li>
+<li>虚拟机将main()函数压栈，生成一个栈帧，压入栈区。</li>
+<li>加载Application.class,生成它的方法表。</li>
+<li>创建Application的对象，存放在堆区。每个对象都指向一个符号变量（类）</li>
+<li>Object.getClass()得到变量对应的类,最终是通过native方法，最终执行调用<code>klass</code>变量，他存放在堆区，指向符号变量，符号变量指向对象所在的内存区域（方法表，成员表）。</li>
+<li>执行<code>Application</code>的<code>onCreate()</code>方法，他是一个对象方法，执行一个对象方法他会从对象出发，去发送一个事件。根据符号变量找打方法表，找到<code>onCreate()</code>方法，并生成一个<code>onCreate()</code>栈帧，压入栈区。</li>
+</ol>
+<h3 id="类什么时候被加载到内存？"><a href="#类什么时候被加载到内存？" class="headerlink" title="类什么时候被加载到内存？"></a>类什么时候被加载到内存？</h3><pre><code class="hljs">1、Application app   
+2、=  new Application();
+</code></pre>
+<p>执行到第一行在方法区开辟一个符号变量，这个符号变量为int类型。并不会将<code>Application</code>类加载到内存。当执行第二行时才会被加载到内存。<code>类的初始化只有在主动引用这时候才会被加载到内存，如new创建 | 反射 Class.fromName()|JNI.findClass()、序列化</code></p>
+<h3 id="如何实现替换有bug的方法？"><a href="#如何实现替换有bug的方法？" class="headerlink" title="如何实现替换有bug的方法？"></a>如何实现替换有bug的方法？</h3><ol>
+<li>根据以上原理我们明白，Java层不能实现方法的替换，那么我们另辟蹊径，通过<font color="red"><strong>Native层操控虚拟机内存</strong></font>,这就是我们前面所说的突破口。</li>
+<li>由于java对象可以创建多个，我们不能替换某一个对象而不替换其他对象的方法，所以我们需要找打一个方法替换所有对象的方法。那就是需要在方法表中替换有bug 的方法。</li>
+<li>方法在虚拟机中叫<code>ArtMethod</code>结构体，它是Native层的。方法表其实就是一个List集合。方法最终是转换为<code>ArtMethod</code>结构体被执行。一个方法被压栈多次这个方法就是递归调用。</li>
+<li>FindClass(实现父委托机制，bootstrapClassLoad) 调用 LookUpClass —&gt;DefineClass(定义一个Class类型，定义klass，所有类型全部置空，之后再加载类)—&gt;LinkClass(加载类信息。从&#x2F;data&#x2F;app&#x2F;包名，Apk中的dex文件中来)—&gt;LinkSuperClass(父类先被加载到内存)—&gt;LinkMethods(父类加载方法){LinkInterfaceMethods 拿到方法数，形成方法表，实例一个ArrayList&lt;<code>ArtMethod</code>&gt;,每个方法实例一个<code>ArtMethod</code>结构体}</li>
+</ol>
+<p>类是抽象的,必须要有一个内存载体{klass,每个类都有一个，并且是唯一的.}</p>
+<h2 id="3、手写实现Andfix"><a href="#3、手写实现Andfix" class="headerlink" title="3、手写实现Andfix"></a>3、手写实现Andfix</h2><h3 id="写一个bug类"><a href="#写一个bug类" class="headerlink" title="写一个bug类"></a>写一个bug类</h3><p>   首先我们要自己写一个bug类，<code>BugClass</code>的<code>test()</code>方法抛出一个异常</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * bug测试类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title">BugClass</span> &#123;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-built_in">int</span> <span class="hljs-title">test</span>()</span>&#123;<br>        <span class="hljs-comment">//测试bug</span><br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">&quot;这是一个异常！&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="在Activity中调用异常的方法"><a href="#在Activity中调用异常的方法" class="headerlink" title="在Activity中调用异常的方法"></a>在Activity中调用异常的方法</h3><pre><code class="hljs">比如说点击某个按钮，这里就不写了。
+</code></pre>
+<h3 id="我们要实现修复"><a href="#我们要实现修复" class="headerlink" title="我们要实现修复"></a>我们要实现修复</h3><pre><code class="hljs">我们实现修复，也就是之前说的替换虚拟机中内存中的方法表里的方法，那么怎么替换呢？一个APK中有成千上万个方法，就某一个有异常，我们怎么区分呢？那就是用注解来区分。
+</code></pre>
+<h4 id="定义注解"><a href="#定义注解" class="headerlink" title="定义注解"></a>定义注解</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.bthvi.mycloassloaderapplication;<br><br><span class="hljs-keyword">import</span> java.lang.annotation.ElementType;<br><span class="hljs-keyword">import</span> java.lang.annotation.Retention;<br><span class="hljs-keyword">import</span> java.lang.annotation.RetentionPolicy;<br><span class="hljs-keyword">import</span> java.lang.annotation.Target;<br><br><span class="hljs-meta">@Target(ElementType.METHOD)</span><br><span class="hljs-meta">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="hljs-keyword">public</span> <span class="hljs-meta">@interface</span> Replace &#123;<br>    <span class="hljs-comment">//修复哪一个class</span><br>    String <span class="hljs-title function_">clazz</span><span class="hljs-params">()</span>;<br>    <span class="hljs-comment">//修复哪一个方法</span><br>    String <span class="hljs-title function_">method</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="修复对应方法所，并给他加上注解"><a href="#修复对应方法所，并给他加上注解" class="headerlink" title="修复对应方法所，并给他加上注解"></a>修复对应方法所，并给他加上注解</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">import</span> com.example.bthvi.mycloassloaderapplication.Replace;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * bug测试类</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BugClass</span> &#123;<br><br>    <span class="hljs-meta">@Replace(clazz = <span class="hljs-string">&quot;com.example.bthvi.mycloassloaderapplication.xxx.BugClass&quot;</span>,method = <span class="hljs-string">&quot;test&quot;</span>)</span><br>    <span class="hljs-keyword">public</span> int test()&#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="生成dex文件查分包"><a href="#生成dex文件查分包" class="headerlink" title="生成dex文件查分包"></a>生成dex文件查分包</h4><p>   怎么生成dex文件，前面一篇文章以及说过了:<a target="_blank" rel="noopener" href="https://bthvi-leiqi.blog.csdn.net/article/details/80954639">Android学习——手把手教你实现Android热修复</a>,这里就不多做说明了。</p>
+<h4 id="实现修复工具类"><a href="#实现修复工具类" class="headerlink" title="实现修复工具类"></a>实现修复工具类</h4><ul>
+<li>首先我们要拿到对应的已经修复的dex文件，项目中我们肯定是从网络和获取，这里我们之还是定义在本地文件夹下。</li>
+<li>其次我们加载这个Dex文件，拿到它的所有的类，遍历类中的方法，根据注解得到哪些方法时候需要修复的。</li>
+<li>再根据注解中的类名方法名通过反射得到已经加载的有bug的方法。</li>
+<li>调用Native方法替换有bug的方法。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.example.bthvi.mycloassloaderapplication;<br><span class="hljs-keyword">import</span> android.content.Context;<br><span class="hljs-keyword">import</span> android.os.Environment;<br><br><span class="hljs-keyword">import</span> java.io.File;<br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.lang.reflect.Method;<br><span class="hljs-keyword">import</span> java.util.Enumeration;<br><br><span class="hljs-keyword">import</span> dalvik.system.DexFile;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> *<span class="hljs-doctag">@author</span> bthvi</span><br><span class="hljs-comment"> *<span class="hljs-doctag">@time</span> 2019/7/20</span><br><span class="hljs-comment"> *<span class="hljs-doctag">@desc</span> 不用启动APP实现热修复</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FixDexManager</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">static</span> <span class="hljs-type">String</span> <span class="hljs-variable">TAG</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;FixDexUtil&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">DEX_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.dex&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">APK_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.apk&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">JAR_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.jar&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">ZIP_SUFFIX</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;.zip&quot;</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">DEX_DIR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;odex&quot;</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">OPTIMIZE_DEX_DIR</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;optimize_dex&quot;</span>;<br>    <span class="hljs-keyword">private</span> Context context;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">FixDexManager</span><span class="hljs-params">(Context context)</span> &#123;<br>        <span class="hljs-built_in">this</span>.context = context;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">isGoingToFix</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">externalStorageDirectory</span> <span class="hljs-operator">=</span> Environment.getExternalStorageDirectory();<br><br>        <span class="hljs-comment">// 遍历所有的修复dex , 因为可能是多个dex修复包</span><br>        <span class="hljs-type">File</span> <span class="hljs-variable">fileDir</span> <span class="hljs-operator">=</span> externalStorageDirectory != <span class="hljs-literal">null</span> ?<br>                <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(externalStorageDirectory,<span class="hljs-string">&quot;007&quot;</span>):<br>                <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(context.getFilesDir(), DEX_DIR);<span class="hljs-comment">// data/data/包名/files/odex（这个可以任意位置）</span><br><br>        File[] listFiles = fileDir.listFiles();<br>        <span class="hljs-keyword">if</span> (listFiles != <span class="hljs-literal">null</span>)&#123;<br>            System.out.println(<span class="hljs-string">&quot;TAG==目录下文件数量=&quot;</span>+listFiles.length);<br>            <span class="hljs-keyword">for</span> (File file : listFiles) &#123;<br>                System.out.println(<span class="hljs-string">&quot;TAG==文件名称=&quot;</span>+file.getName());<br>                <span class="hljs-keyword">if</span> (file.getName().startsWith(<span class="hljs-string">&quot;fix&quot;</span>) &amp;&amp;<br>                        (file.getName().endsWith(DEX_SUFFIX))) &#123;<br>                    loadDex(file);<span class="hljs-comment">// 开始修复</span><br>                    <span class="hljs-comment">//有目标dex文件, 需要修复</span><br>                &#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 加载Dex文件</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> file</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadDex</span><span class="hljs-params">(File file)</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">DexFile</span> <span class="hljs-variable">dexFile</span> <span class="hljs-operator">=</span> DexFile.loadDex(file.getAbsolutePath(),<br>                    <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(context.getCacheDir(), <span class="hljs-string">&quot;opt&quot;</span>).getAbsolutePath(), Context.MODE_PRIVATE);<br>            <span class="hljs-comment">//当前的dex里面的class 类名集合</span><br>            Enumeration&lt;String&gt; entry=dexFile.entries();<br>            <span class="hljs-keyword">while</span> (entry.hasMoreElements()) &#123;<br>                <span class="hljs-comment">//拿到Class类名</span><br>                String clazzName= entry.nextElement();<br>                <span class="hljs-comment">//通过加载得到类  这里不能通过反射，因为当前的dex没有加载到虚拟机内存中</span><br>                Class realClazz= dexFile.loadClass(clazzName, context.getClassLoader());<br>                <span class="hljs-keyword">if</span> (realClazz != <span class="hljs-literal">null</span>) &#123;<br>                    fixClazz(realClazz);<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">catch</span> (IOException e) &#123;<br>            e.printStackTrace();<br>        &#125;<br><br>    &#125;<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * 修复有bug的方法</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> realClazz</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">fixClazz</span><span class="hljs-params">(Class realClazz)</span> &#123;<br>        <span class="hljs-comment">//得到类中所有方法</span><br>        Method[] methods=realClazz.getMethods();<br>        <span class="hljs-comment">//遍历方法 通过注解 得到需要修复的方法</span><br>        <span class="hljs-keyword">for</span> (Method rightMethod : methods) &#123;<br>            <span class="hljs-comment">//拿到注解</span><br>            <span class="hljs-type">Replace</span> <span class="hljs-variable">replace</span> <span class="hljs-operator">=</span> rightMethod.getAnnotation(Replace.class);<br>            <span class="hljs-keyword">if</span> (replace == <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>            <span class="hljs-comment">//得到类名</span><br>            String clazzName=replace.clazz();<br>            <span class="hljs-comment">//得到方法名</span><br>            String methodName=replace.method();<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-comment">//反射得到本地的有bug的方法的类</span><br>                Class wrongClazz=  Class.forName(clazzName);<br>                <span class="hljs-comment">//得到有bug的方法（注意修复包中的方法参数名和参数列表必须一致）</span><br>                <span class="hljs-type">Method</span> <span class="hljs-variable">wrongMethod</span> <span class="hljs-operator">=</span> wrongClazz.getDeclaredMethod(methodName, rightMethod.getParameterTypes());<br>                <span class="hljs-comment">//调用native方法替换有bug的方法</span><br>                replace(wrongMethod, rightMethod);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br><br><br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">replace</span><span class="hljs-params">(Method wrongMethod, Method rightMethod)</span> ;<br>&#125;<br><br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="实现Native方法替换"><a href="#实现Native方法替换" class="headerlink" title="实现Native方法替换"></a>实现Native方法替换</h4><p>   我们前面说了，方法在虚拟机中是以<code>ArtMethod</code>结构体存在的，那么我们替换就是要去替换旧的方法的<code>ArtMethod</code>对象的所有属性。</p>
+<figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs xl">#include &lt;jni.h&gt;<br>#include &lt;string&gt;<br>#include <span class="hljs-string">&quot;art_method.h&quot;</span><br><br>extern <span class="hljs-string">&quot;C&quot;</span><br>JNIEXPORT void JNICALL<br>Java_com_example_bthvi_mycloassloaderapplication_FixDexManager_replace(JNIEnv *env, jclass type, jobject wrongMethod,<br>                                             jobject rightMethod) &#123;<br><br>    <span class="hljs-comment">//ArtMethod存在于Android 系统源码中，只需要导入我们需要的部分（art_method.h）</span><br>    <span class="hljs-function"><span class="hljs-title">art</span>::mirror::ArtMethod *wrong=  (art::mirror::ArtMethod *)env-&gt;</span>FromReflectedMethod(wrongMethod);<br>    <span class="hljs-function"><span class="hljs-title">art</span>::mirror::ArtMethod *right=  (art::mirror::ArtMethod *)env-&gt;</span>FromReflectedMethod(rightMethod);<br>    <span class="hljs-comment">//    method   ---&gt;class ----被加载---&gt;ClassLoader</span><br>    <span class="hljs-comment">//错误的成员变量替换为正确的成员变量</span><br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">declaring_class_</span> = right-&gt;</span>declaring_class_;<br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">dex_cache_resolved_methods_</span> = right-&gt;</span>dex_cache_resolved_methods_;<br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">access_flags_</span> = right-&gt;</span>access_flags_;<br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">dex_cache_resolved_types_</span> = right-&gt;</span>dex_cache_resolved_types_;<br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">dex_code_item_offset_</span> = right-&gt;</span>dex_code_item_offset_;<br>    <span class="hljs-comment">//    这里   方法索引的替换</span><br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">method_index_</span> = right-&gt;</span>method_index_;<br>    <span class="hljs-function"><span class="hljs-title">wrong</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">dex_method_index_</span> = right-&gt;</span>dex_method_index_;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里由于要用到<code>ArtMethod</code>所以我们要从源码中拿到<code>ArtMethod</code>,源码中<code>ArtMethod</code>引用太多的系统源码我们这里简化一下，只要声明我们需要的变量即可。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">namespace</span> <span class="hljs-symbol">art</span> &#123;<br>    <span class="hljs-keyword">namespace</span> <span class="hljs-symbol">mirror</span> &#123;<br>        <span class="hljs-keyword">class</span> <span class="hljs-symbol">Object</span>&#123;<br>            <span class="hljs-comment">// The Class representing the type of the object.</span><br>            <span class="hljs-built_in">uint32</span>_t klass_;<br>            <span class="hljs-comment">// Monitor and hash code information.</span><br>            <span class="hljs-built_in">uint32</span>_t monitor_;<br><br>        &#125;;<br>        <span class="hljs-comment">//简化ArtMethod  只需要关注我们需要的，只需要成员变量声明</span><br>        <span class="hljs-keyword">class</span> <span class="hljs-symbol">ArtMethod</span> : <span class="hljs-symbol">public</span> <span class="hljs-symbol">Object</span> &#123;<br>        <span class="hljs-keyword">public</span>:<br><br>            <span class="hljs-built_in">uint32</span>_t access_flags_;<br>            <span class="hljs-built_in">uint32</span>_t dex_code_item_offset_;<br>            <span class="hljs-comment">// Index into method_ids of the dex file associated with this method</span><br>            <span class="hljs-comment">//方法再dex中的索引</span><br>            <span class="hljs-built_in">uint32</span>_t method_dex_index_;<br>            <span class="hljs-built_in">uint32</span>_t dex_method_index_;<br>            <span class="hljs-comment">//在方法表的索引</span><br>            <span class="hljs-built_in">uint32</span>_t method_index_;<br>            <span class="hljs-keyword">const</span> <span class="hljs-built_in">void</span> *native_method_;<br><br>            <span class="hljs-keyword">const</span> <span class="hljs-built_in">uint16</span>_t *vmap_table_;<br>            <span class="hljs-comment">// Short cuts to declaring_class_-&gt;dex_cache_ member for fast compiled code access.</span><br>            <span class="hljs-built_in">uint32</span>_t dex_cache_resolved_methods_;<br>            <span class="hljs-comment">//方法 自发</span><br>            <span class="hljs-comment">// Short cuts to declaring_class_-&gt;dex_cache_ member for fast compiled code access.</span><br>            <span class="hljs-built_in">uint32</span>_t dex_cache_resolved_types_;<br><br><br>            <span class="hljs-comment">// Field order required by test &quot;ValidateFieldOrderOfJavaCppUnionClasses&quot;.</span><br>            <span class="hljs-comment">// The class we are a part of.</span><br>            <span class="hljs-comment">//所属的函数</span><br>            <span class="hljs-built_in">uint32</span>_t declaring_class_;<br>        &#125;;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这里还用到了<code>Object</code>所以我们还是要声明<code>Object</code>这个的源码太多这里就不复制了，我们也不需要特意去搞懂这些底层源码，只需要关注我们需要的就行。到这里我们就实现了Native层的热修复。</p>
+<h2 id="Andfix的兼容性"><a href="#Andfix的兼容性" class="headerlink" title="Andfix的兼容性"></a>Andfix的兼容性</h2><p>前面我们说的就是Andfix的原理及简单实现，但是<font color="red"><strong>Andfix兼容性比较差</strong></font>。它的兼容性差是为什么呢？我们这里主要的原理是替换<code>ArtMethod</code>结构体的成员变量，这个结构体是初始化方法表时虚拟机创建的，<font color="red">Google对于不同的系统版本<code>ArtMethod</code>结构体的成员变量都有做变动</font>如下：我们看下Android 6.0和7.0中<code>ArtMethod</code>的不同点[简单找一两个]。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-comment">//  Android 6.0系统源码中ArtMethod 精简版  去掉注释</span><br><span class="hljs-keyword">class</span> <span class="hljs-symbol">ArtMethod</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-built_in">uint32</span>_t declaring_class_;<br>    <span class="hljs-built_in">uint32</span>_t dex_cache_resolved_methods_;<br>    <span class="hljs-built_in">uint32</span>_t dex_cache_resolved_types_;<br>    <span class="hljs-built_in">uint32</span>_t access_flags_;<br>    <span class="hljs-built_in">uint32</span>_t dex_code_item_offset_;<br>    <span class="hljs-built_in">uint32</span>_t dex_method_index_;<br>    <span class="hljs-built_in">uint32</span>_t method_index_;<br><br>    struct PtrSizedFields &#123;<br>        <span class="hljs-comment">// Method dispatch from the interpreter invokes this pointer which may cause a bridge into</span><br>        <span class="hljs-comment">// compiled code.</span><br>        <span class="hljs-built_in">void</span>* entry_point_from_interpreter_;<br>        <span class="hljs-comment">// Pointer to JNI function registered to this method, or a function to resolve the JNI function.</span><br>        <span class="hljs-built_in">void</span>* entry_point_from_jni_;<br>        <span class="hljs-comment">// Method dispatch from quick compiled code invokes this pointer which may cause bridging into</span><br>        <span class="hljs-comment">// the interpreter.</span><br>        <span class="hljs-built_in">void</span>* entry_point_from_quick_compiled_code_;<br>    &#125; ptr_sized_fields_;<br>&#125;;<br><br><span class="hljs-comment">//  Android 7.0系统源码中ArtMethod 精简版  去掉注释</span><br><span class="hljs-keyword">class</span> <span class="hljs-symbol">ArtMethod</span> &#123;<br><span class="hljs-keyword">public</span>:<br><br>	<span class="hljs-built_in">uint32</span>_t declaring_class_;<br>	<span class="hljs-built_in">uint32</span>_t access_flags_;<br>	<span class="hljs-built_in">uint32</span>_t dex_code_item_offset_;<br>	<span class="hljs-built_in">uint32</span>_t dex_method_index_;<br>	<span class="hljs-built_in">uint16</span>_t method_index_;<br>	<span class="hljs-built_in">uint16</span>_t hotness_count_;<br>	struct PtrSizedFields &#123;<br>		<span class="hljs-comment">// Short cuts to declaring_class_-&gt;dex_cache_ member for fast compiled code access.</span><br>		ArtMethod** dex_cache_resolved_methods_;<br><br>		<span class="hljs-comment">// Short cuts to declaring_class_-&gt;dex_cache_ member for fast compiled code access.</span><br>		<span class="hljs-built_in">void</span>* dex_cache_resolved_types_;<br><br>		<span class="hljs-comment">// Pointer to JNI function registered to this method, or a function to resolve the JNI function,</span><br>		<span class="hljs-comment">// or the profiling data for non-native methods, or an ImtConflictTable.</span><br>		<span class="hljs-built_in">void</span>* entry_point_from_jni_;<br><br>		<span class="hljs-comment">// Method dispatch from quick compiled code invokes this pointer which may cause bridging into</span><br>		<span class="hljs-comment">// the interpreter.</span><br>		<span class="hljs-built_in">void</span>* entry_point_from_quick_compiled_code_;<br>	&#125; ptr_sized_fields_;<br><br>&#125;;<br></code></pre></td></tr></table></figure>
+<p>从上面的源码中我们明显看到<code>ArtMethod</code>结构体中成员变量的改变，如<code>method_index_</code>在6.0是32位在7.0中就是16位了。还有<code>PtrSizedFields</code>结构体的成员变量也有修改。所以这就使的AndFix的兼容性很差，要想兼容所有版本就得对不同版本去做兼容适配。<br>由于AndFix的兼容性和它是免费开源的,阿里在sophix出来之后就以及不再维护AndFix了。<code>Sophix</code>它的方案可以说是比较完美了，它是结合了JAVA层和Native层的两者的有点，它的原理介绍大家可以看看这本书：<a target="_blank" rel="noopener" href="https://yq.aliyun.com/go/articleRenderRedirect?spm=a2c4e.11153940.0.0.7cab7c4eZ9k2ok&url=https://yq.aliyun.com/attachment/download/?id=1855">《深入探索Android热修复技术原理》</a></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们这里是对它的热修复原理的学习。最后附上项目链接</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Terrybthvi/my_classloader_demo">GitHub:JAVA层实现热修复和Native层实现热修复源码</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/AndFix">GitHub:AndFix开源项目地址</a></li>
+</ul>
+<blockquote>
+<p>欢迎在评论区留下你的观点大家一起交流，一起成长。如果今天的这篇文章对你在工作和生活有所帮助，欢迎<font color="green"><strong>转发</strong></font>分享给更多人。<br></p>
+<p>同时欢迎大家<font color="green"><strong>扫描左侧边栏的二维码关注我的公众号</strong></font>大家一起学习交流 Android、HarmonyOS等知识。从这里出发我们一起讨论，一起交流，一起提升。</p>
+</blockquote>
+<p><img src="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%AE%9E%E7%8E%B0AndFix%E7%83%AD%E4%BF%AE%E5%A4%8D/wx_qrcode.png" srcset="/img/loading.gif" lazyload alt="我的公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/%E7%83%AD%E4%BF%AE%E5%A4%8D/" class="print-no-link">#热修复</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Android热修复——自己动手实现AndFix热修复</div>
+      <div>http://example.com/android/Android热修复——自己动手实现AndFix热修复/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>紫雾凌寒</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/android/Android%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E2%80%94%E2%80%94View%E6%98%AF%E5%A6%82%E4%BD%95%E8%A2%AB%E6%B7%BB%E5%8A%A0%E5%88%B0%E5%B1%8F%E5%B9%95%E7%9A%84/" title="Android源码分析——View是如何被添加到屏幕的">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Android源码分析——View是如何被添加到屏幕的</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/android/Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E2%80%94%E2%80%94%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E5%AE%9E%E7%8E%B0Android%E7%83%AD%E4%BF%AE%E5%A4%8D/" title="Android热修复——手把手教你实现Android热修复">
+                        <span class="hidden-mobile">Android热修复——手把手教你实现Android热修复</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
